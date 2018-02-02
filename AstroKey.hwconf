@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ASCII"?>
 <device:XMLDevice xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:device="http://www.silabs.com/ss/hwconfig/document/device.ecore" name="EFM8UB10F16G-C-QFN20" partId="mcu.8051.efm8.ub1.efm8ub10f16g-c-qfn20" version="4.0.1" contextId="%DEFAULT%">
-  <mode name="DefaultMode">
+  <mode name="FlashMode">
     <property object="ADC_0" propertyId="adc.configuration.sarclockdivider" value="6"/>
     <property object="CIP51_0" propertyId="ABPeripheral.included" value="true"/>
     <property object="CIP51_0" propertyId="cip51.prefetchenginecontrol.enableprefetch" value="Enabled"/>
@@ -8,21 +8,155 @@
     <property object="CLOCK_0" propertyId="ABPeripheral.included" value="true"/>
     <property object="CLOCK_0" propertyId="clock.clockselect.clocksourcedivider" value="SYSCLK / 1"/>
     <property object="CLOCK_0" propertyId="clock.clockselect.selectclocksource" value="Internal High Frequency Oscillator 1"/>
-    <property object="DefaultMode" propertyId="mode.diagramLocation" value="100, 100"/>
+    <property object="CROSSBAR0" propertyId="xbar0.spi0.clockdata" value="Enabled"/>
+    <property object="FlashMode" propertyId="mode.diagramLocation" value="100, 100"/>
     <property object="INTERRUPT_0" propertyId="ABPeripheral.included" value="true"/>
     <property object="INTERRUPT_0" propertyId="interrupt.interruptenable.enableallinterrupts" value="Enabled"/>
     <property object="INTERRUPT_0" propertyId="interrupt.interruptenable.enabletimer2interrupt" value="Enabled"/>
     <property object="INTERRUPT_0" propertyId="interruptenables.codegenerationoptions.generateinterruptfunctions" value="Disabled"/>
-    <property object="P0.0" propertyId="ports.settings.label" value="S0"/>
-    <property object="P0.0" propertyId="ports.settings.skip" value="Skipped"/>
-    <property object="P0.1" propertyId="ports.settings.label" value="S1"/>
-    <property object="P0.1" propertyId="ports.settings.skip" value="Skipped"/>
-    <property object="P0.2" propertyId="ports.settings.label" value="S2"/>
-    <property object="P0.2" propertyId="ports.settings.skip" value="Skipped"/>
-    <property object="P0.3" propertyId="ports.settings.label" value="S3"/>
+    <property object="P0.0" propertyId="ports.settings.iomode" value="Digital Push-Pull Output"/>
+    <property object="P0.0" propertyId="ports.settings.label" value="B1"/>
+    <property object="P0.0" propertyId="ports.settings.outputmode" value="Push-pull"/>
+    <property object="P0.2" propertyId="ports.settings.iomode" value="Digital Push-Pull Output"/>
+    <property object="P0.2" propertyId="ports.settings.label" value="B0"/>
+    <property object="P0.2" propertyId="ports.settings.outputmode" value="Push-pull"/>
+    <property object="P0.3" propertyId="ports.settings.iomode" value="Digital Push-Pull Output"/>
+    <property object="P0.3" propertyId="ports.settings.label" value="D_LED"/>
+    <property object="P0.3" propertyId="ports.settings.outputmode" value="Push-pull"/>
     <property object="P0.3" propertyId="ports.settings.skip" value="Skipped"/>
-    <property object="P0.4" propertyId="ports.settings.label" value="S4"/>
+    <property object="P0.4" propertyId="ports.settings.iomode" value="Digital Push-Pull Output"/>
+    <property object="P0.4" propertyId="ports.settings.label" value="CS"/>
+    <property object="P0.4" propertyId="ports.settings.outputmode" value="Push-pull"/>
     <property object="P0.4" propertyId="ports.settings.skip" value="Skipped"/>
+    <property object="P0.5" propertyId="ports.settings.label" value="S4"/>
+    <property object="P0.5" propertyId="ports.settings.skip" value="Skipped"/>
+    <property object="P0.6" propertyId="ports.settings.label" value="S3"/>
+    <property object="P0.6" propertyId="ports.settings.skip" value="Skipped"/>
+    <property object="P0.7" propertyId="ports.settings.label" value="S2"/>
+    <property object="P0.7" propertyId="ports.settings.skip" value="Skipped"/>
+    <property object="P1.0" propertyId="ports.settings.label" value="S1"/>
+    <property object="P1.0" propertyId="ports.settings.skip" value="Skipped"/>
+    <property object="P1.1" propertyId="ports.settings.iomode" value="Digital Push-Pull Output"/>
+    <property object="P1.1" propertyId="ports.settings.label" value="L0"/>
+    <property object="P1.1" propertyId="ports.settings.outputmode" value="Push-pull"/>
+    <property object="P1.2" propertyId="ports.settings.iomode" value="Digital Push-Pull Output"/>
+    <property object="P1.2" propertyId="ports.settings.label" value="L1"/>
+    <property object="P1.2" propertyId="ports.settings.outputmode" value="Push-pull"/>
+    <property object="P1.2" propertyId="ports.settings.skip" value="Skipped"/>
+    <property object="P3.1" propertyId="ports.settings.iomode" value="Digital Push-Pull Output"/>
+    <property object="P3.1" propertyId="ports.settings.label" value="L2"/>
+    <property object="P3.1" propertyId="ports.settings.outputmode" value="Push-pull"/>
+    <property object="PBCFG_0" propertyId="pbcfg.settings.enablecrossbar" value="Enabled"/>
+    <property object="PCA_0" propertyId="pca.pcacountertimerconfiguration.pcaclockfrequency" value="2.042 MHz"/>
+    <property object="PCA_0" propertyId="pca.pcacountertimerconfiguration.pcaclockperiod" value="489.796 nS"/>
+    <property object="SPI_0" propertyId="ABPeripheral.included" value="true"/>
+    <property object="SPI_0" propertyId="spi.clockrate.spiclockfrequencyactual" value="12.000 MHz"/>
+    <property object="SPI_0" propertyId="spi.clockrate.spiclockfrequencytarget" value="12000000"/>
+    <property object="SPI_0" propertyId="spi.clockrate.sysclk" value="48.000 MHz"/>
+    <property object="SPI_0" propertyId="spi.clockrate.sysclkdividercoefficientspi0ckr" value="1"/>
+    <property object="SPI_0" propertyId="spi.configuration.enablemastermode" value="Enable"/>
+    <property object="SPI_0" propertyId="spi.configuration.spimode" value="Master"/>
+    <property object="SPI_0" propertyId="spi.control.slaveselectmode" value="Slave or master 3-wire mode"/>
+    <property object="SPI_0" propertyId="spi.control.spienable" value="Enabled"/>
+    <property object="TIMER01_0" propertyId="ABPeripheral.included" value="true"/>
+    <property object="TIMER16_2" propertyId="ABPeripheral.included" value="true"/>
+    <property object="TIMER16_2" propertyId="timer16.control.runcontrol" value="Start"/>
+    <property object="TIMER16_2" propertyId="timer16.control.timerrunningstate" value="Timer is Running"/>
+    <property object="TIMER16_2" propertyId="timer16.highbyte.highbyte" value="240"/>
+    <property object="TIMER16_2" propertyId="timer16.initandreloadvalue.targetoverflowfrequency" value="1000"/>
+    <property object="TIMER16_2" propertyId="timer16.initandreloadvalue.timerinitvalue" value="61536"/>
+    <property object="TIMER16_2" propertyId="timer16.initandreloadvalue.timerreloadvalue" value="61536"/>
+    <property object="TIMER16_2" propertyId="timer16.lowbyte.lowbyte" value="96"/>
+    <property object="TIMER16_2" propertyId="timer16.reloadhighbyte.reloadhighbyte" value="240"/>
+    <property object="TIMER16_2" propertyId="timer16.reloadlowbyte.reloadlowbyte" value="96"/>
+    <property object="TIMER16_3" propertyId="ABPeripheral.included" value="true"/>
+    <property object="TIMER16_4" propertyId="ABPeripheral.included" value="true"/>
+    <property object="TIMER_SETUP_0" propertyId="ABPeripheral.included" value="true"/>
+    <property object="USBLIB_0" propertyId="ABPeripheral.included" value="true"/>
+    <property object="USBLIB_0" propertyId="configuration.configurationparameters.configurationstring" value=""/>
+    <property object="USBLIB_0" propertyId="configuration.configurationparameters.devicepower" value="Bus-Powered"/>
+    <property object="USBLIB_0" propertyId="device.deviceproperties.bmaxpacketsize" value="64"/>
+    <property object="USBLIB_0" propertyId="device.deviceproperties.devicereleasenumber" value="1"/>
+    <property object="USBLIB_0" propertyId="device.deviceproperties.productidpid" value="65026"/>
+    <property object="USBLIB_0" propertyId="device.deviceproperties.productstring" value="AstroKey"/>
+    <property object="USBLIB_0" propertyId="device.deviceproperties.serialnumberstring" value="0000000000000001"/>
+    <property object="USBLIB_0" propertyId="device.deviceproperties.vendorstring" value="AstroKey"/>
+    <property object="USBLIB_0" propertyId="endpoints.endpoint1in.endpoint1in" value="Enabled"/>
+    <property object="USBLIB_0" propertyId="endpoints.endpoint1in.maxpacketsizebytes" value="64"/>
+    <property object="USBLIB_0" propertyId="endpoints.endpoint1in.pollingintervalms" value="24"/>
+    <property object="USBLIB_0" propertyId="endpoints.endpoint1in.transfertype" value="Interrupt"/>
+    <property object="USBLIB_0" propertyId="endpoints.endpoint1in.usedbypreset" value="0"/>
+    <property object="USBLIB_0" propertyId="endpoints.endpoint1out.maxpacketsizebytes" value="64"/>
+    <property object="USBLIB_0" propertyId="endpoints.endpoint2in.maxpacketsizebytes" value="64"/>
+    <property object="USBLIB_0" propertyId="endpoints.endpoint2out.maxpacketsizebytes" value="64"/>
+    <property object="USBLIB_0" propertyId="endpoints.endpoint3in.maxpacketsizebytes" value="64"/>
+    <property object="USBLIB_0" propertyId="endpoints.endpoint3out.maxpacketsizebytes" value="64"/>
+    <property object="USBLIB_0" propertyId="interfaces.interface0.hidpollingintervalms" value="24"/>
+    <property object="USBLIB_0" propertyId="interfaces.interface0.hidreportdescriptor" value="&#xA;  0x05, 0x01,                      // USAGE_PAGE (Generic Desktop)&#xA;  0x09, 0x06,                      // USAGE (Keyboard)&#xA;  0xa1, 0x01,                      // COLLECTION (Application)&#xA;  0x05, 0x07,                      // USAGE_PAGE (Keyboard)&#xA;  0x19, 0xe0,                      // USAGE_MINIMUM (Keyboard LeftControl)&#xA;  0x29, 0xe7,                      // USAGE_MAXIMUM (Keyboard Right GUI)&#xA;  0x15, 0x00,                      // LOGICAL_MINIMUM (0)&#xA;  0x25, 0x01,                      // LOGICAL_MAXIMUM (1)&#xA;  0x75, 0x01,                      // REPORT_SIZE (1)&#xA;  0x95, 0x08,                      // REPORT_COUNT (8)&#xA;  0x81, 0x02,                      // INPUT (Data,Var,Abs)&#xA;  0x15, 0x00,                      // LOGICAL_MINIMUM (0)&#xA;  0x25, 0x01,                      // LOGICAL_MAXIMUM (1)&#xA;  0x75, 0x01,                      // REPORT_SIZE (1)&#xA;  0x95, 0x08,                      // REPORT_COUNT (8)&#xA;  0x81, 0x01,                      // INPUT (Cnst,Ary,Abs)&#xA;  0x19, 0x00,                      // USAGE_MINIMUM (Reserved (no event indicated))&#xA;  0x29, 0x65,                      // USAGE_MAXIMUM (Keyboard Application)&#xA;  0x15, 0x00,                      // LOGICAL_MINIMUM (0)&#xA;  0x25, 0x65,                      // LOGICAL_MAXIMUM (101)&#xA;  0x75, 0x08,                      // REPORT_SIZE (8)&#xA;  0x95, 0x06,                      // REPORT_COUNT (6)&#xA;  0x81, 0x00,                      // INPUT (Data,Ary,Abs)&#xA;  0x05, 0x08,                      // USAGE_PAGE (LEDs)&#xA;  0x19, 0x01,                      // USAGE_MINIMUM (Num Lock)&#xA;  0x29, 0x03,                      // USAGE_MAXIMUM (Scroll Lock)&#xA;  0x15, 0x00,                      // LOGICAL_MINIMUM (0)&#xA;  0x25, 0x01,                      // LOGICAL_MAXIMUM (1)&#xA;  0x75, 0x01,                      // REPORT_SIZE (1)&#xA;  0x95, 0x03,                      // REPORT_COUNT (3)&#xA;  0x91, 0x02,                      // OUTPUT (Data,Var,Abs)&#xA;  0x75, 0x01,                      // REPORT_SIZE (1)&#xA;  0x95, 0x05,                      // REPORT_COUNT (5)&#xA;  0x91, 0x01,                      // OUTPUT (Cnst,Ary,Abs)&#xA;  0xc0                             // END_COLLECTION&#xA;"/>
+    <property object="USBLIB_0" propertyId="interfaces.interface0.hidreporttemplate" value="Keyboard"/>
+    <property object="USBLIB_0" propertyId="interfaces.interface0.interfaceclass" value="HID (Human Interface Device)"/>
+    <property object="USBLIB_0" propertyId="interfaces.interface0.interfacestring" value="HID Keyboard"/>
+    <property object="USBLIB_0" propertyId="interfaces.interface0.preset" value="HID Keyboard"/>
+    <property object="USBLIB_0" propertyId="interfaces.interface0.protocol" value="1"/>
+    <property object="USBLIB_0" propertyId="library.callbackfunctions.handlercallback" value="Enabled"/>
+    <property object="USBLIB_0" propertyId="library.callbackfunctions.resetcallback" value="Enabled"/>
+    <property object="USBLIB_0" propertyId="library.callbackfunctions.selfpoweredcallback" value="Enabled"/>
+    <property object="USBLIB_0" propertyId="library.callbackfunctions.setupcommandcallback" value="Enabled"/>
+    <property object="USBLIB_0" propertyId="library.callbackfunctions.startofframecallback" value="Enabled"/>
+    <property object="USBLIB_0" propertyId="library.callbackfunctions.statechangecallback" value="Enabled"/>
+    <property object="USBLIB_0" propertyId="library.libraryconfiguration.clockrecovery" value="Enabled"/>
+    <property object="USBLIB_0" propertyId="library.powersavingmode.enteronsuspend" value="Enabled"/>
+    <property object="USBLIB_0" propertyId="library.powersavingmode.powersavemode" value="( USB_PWRSAVE_MODE_ONSUSPEND )"/>
+    <property object="VREG_0" propertyId="ABPeripheral.included" value="true"/>
+    <property object="VREG_0" propertyId="vreg.5vto33vldoregulatorldo1.regulatorbias" value="Disabled (Lowest power consumption)"/>
+    <property object="WDT_0" propertyId="ABPeripheral.included" value="true"/>
+    <property object="WDT_0" propertyId="wdt.watchdogcontrol.wdtenable" value="Disable"/>
+  </mode>
+  <mode name="ButtonMode">
+    <property object="ADC_0" propertyId="adc.configuration.sarclockdivider" value="6"/>
+    <property object="ButtonMode" propertyId="mode.diagramLocation" value="110, 110"/>
+    <property object="CIP51_0" propertyId="ABPeripheral.included" value="true"/>
+    <property object="CIP51_0" propertyId="cip51.prefetchenginecontrol.enableprefetch" value="Enabled"/>
+    <property object="CIP51_0" propertyId="cip51.prefetchenginecontrol.flashreadtiming" value="SYSCLK is below 50 MHz"/>
+    <property object="CLOCK_0" propertyId="ABPeripheral.included" value="true"/>
+    <property object="CLOCK_0" propertyId="clock.clockselect.clocksourcedivider" value="SYSCLK / 1"/>
+    <property object="CLOCK_0" propertyId="clock.clockselect.selectclocksource" value="Internal High Frequency Oscillator 1"/>
+    <property object="INTERRUPT_0" propertyId="ABPeripheral.included" value="true"/>
+    <property object="INTERRUPT_0" propertyId="interrupt.interruptenable.enableallinterrupts" value="Enabled"/>
+    <property object="INTERRUPT_0" propertyId="interrupt.interruptenable.enabletimer2interrupt" value="Enabled"/>
+    <property object="INTERRUPT_0" propertyId="interruptenables.codegenerationoptions.generateinterruptfunctions" value="Disabled"/>
+    <property object="P0.0" propertyId="ports.settings.label" value="B1"/>
+    <property object="P0.0" propertyId="ports.settings.skip" value="Skipped"/>
+    <property object="P0.1" propertyId="ports.settings.iomode" value="Digital Push-Pull Output"/>
+    <property object="P0.1" propertyId="ports.settings.outputmode" value="Push-pull"/>
+    <property object="P0.2" propertyId="ports.settings.label" value="B0"/>
+    <property object="P0.2" propertyId="ports.settings.skip" value="Skipped"/>
+    <property object="P0.3" propertyId="ports.settings.iomode" value="Digital Push-Pull Output"/>
+    <property object="P0.3" propertyId="ports.settings.label" value="D_LED"/>
+    <property object="P0.3" propertyId="ports.settings.outputmode" value="Push-pull"/>
+    <property object="P0.3" propertyId="ports.settings.skip" value="Skipped"/>
+    <property object="P0.4" propertyId="ports.settings.iomode" value="Digital Push-Pull Output"/>
+    <property object="P0.4" propertyId="ports.settings.label" value="CS"/>
+    <property object="P0.4" propertyId="ports.settings.outputmode" value="Push-pull"/>
+    <property object="P0.4" propertyId="ports.settings.skip" value="Skipped"/>
+    <property object="P0.5" propertyId="ports.settings.label" value="S4"/>
+    <property object="P0.5" propertyId="ports.settings.skip" value="Skipped"/>
+    <property object="P0.6" propertyId="ports.settings.label" value="S3"/>
+    <property object="P0.6" propertyId="ports.settings.skip" value="Skipped"/>
+    <property object="P0.7" propertyId="ports.settings.label" value="S2"/>
+    <property object="P0.7" propertyId="ports.settings.skip" value="Skipped"/>
+    <property object="P1.0" propertyId="ports.settings.label" value="S1"/>
+    <property object="P1.0" propertyId="ports.settings.skip" value="Skipped"/>
+    <property object="P1.1" propertyId="ports.settings.iomode" value="Digital Push-Pull Output"/>
+    <property object="P1.1" propertyId="ports.settings.label" value="L0"/>
+    <property object="P1.1" propertyId="ports.settings.outputmode" value="Push-pull"/>
+    <property object="P1.2" propertyId="ports.settings.iomode" value="Digital Push-Pull Output"/>
+    <property object="P1.2" propertyId="ports.settings.label" value="L1"/>
+    <property object="P1.2" propertyId="ports.settings.outputmode" value="Push-pull"/>
+    <property object="P1.2" propertyId="ports.settings.skip" value="Skipped"/>
+    <property object="P3.1" propertyId="ports.settings.iomode" value="Digital Push-Pull Output"/>
+    <property object="P3.1" propertyId="ports.settings.label" value="L2"/>
+    <property object="P3.1" propertyId="ports.settings.outputmode" value="Push-pull"/>
     <property object="PBCFG_0" propertyId="pbcfg.settings.enablecrossbar" value="Enabled"/>
     <property object="PCA_0" propertyId="pca.pcacountertimerconfiguration.pcaclockfrequency" value="2.042 MHz"/>
     <property object="PCA_0" propertyId="pca.pcacountertimerconfiguration.pcaclockperiod" value="489.796 nS"/>
@@ -77,15 +211,14 @@
     <property object="USBLIB_0" propertyId="library.callbackfunctions.statechangecallback" value="Enabled"/>
     <property object="USBLIB_0" propertyId="library.libraryconfiguration.clockrecovery" value="Enabled"/>
     <property object="USBLIB_0" propertyId="library.powersavingmode.enteronsuspend" value="Enabled"/>
-    <property object="USBLIB_0" propertyId="library.powersavingmode.enteronvbusoff" value="Enabled"/>
-    <property object="USBLIB_0" propertyId="library.powersavingmode.powersavemode" value="( USB_PWRSAVE_MODE_ONSUSPEND \&#xA;                                               | USB_PWRSAVE_MODE_ONVBUSOFF )"/>
+    <property object="USBLIB_0" propertyId="library.powersavingmode.powersavemode" value="( USB_PWRSAVE_MODE_ONSUSPEND )"/>
     <property object="VREG_0" propertyId="ABPeripheral.included" value="true"/>
     <property object="VREG_0" propertyId="vreg.5vto33vldoregulatorldo1.regulatorbias" value="Disabled (Lowest power consumption)"/>
     <property object="WDT_0" propertyId="ABPeripheral.included" value="true"/>
     <property object="WDT_0" propertyId="wdt.watchdogcontrol.wdtenable" value="Disable"/>
   </mode>
   <modeTransition>
-    <property object="RESET &#x2192; DefaultMode" propertyId="modeTransition.source" value="RESET"/>
-    <property object="RESET &#x2192; DefaultMode" propertyId="modeTransition.target" value="DefaultMode"/>
+    <property object="RESET &#x2192; FlashMode" propertyId="modeTransition.source" value="RESET"/>
+    <property object="RESET &#x2192; FlashMode" propertyId="modeTransition.target" value="FlashMode"/>
   </modeTransition>
 </device:XMLDevice>

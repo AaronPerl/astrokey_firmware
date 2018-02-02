@@ -138,8 +138,7 @@
 // 
 // -----------------------------------------------------------------------------
 // $[Power Save Mode]
-#define SLAB_USB_PWRSAVE_MODE                  ( USB_PWRSAVE_MODE_ONSUSPEND \
-                                               | USB_PWRSAVE_MODE_ONVBUSOFF )
+#define SLAB_USB_PWRSAVE_MODE                  ( USB_PWRSAVE_MODE_ONSUSPEND )
 // [Power Save Mode]$
 
 // -----------------------------------------------------------------------------
