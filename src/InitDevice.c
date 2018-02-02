@@ -20,527 +20,8 @@
 // [Library Includes]$
 
 //==============================================================================
-// enter_DefaultMode_from_RESET
+// enter_FlashMode_from_RESET
 //==============================================================================
-extern void enter_DefaultMode_from_RESET(void)
-{
-  // $[Config Calls]
-  // Save the SFRPAGE
-  uint8_t SFRPAGE_save = SFRPAGE;
-  WDT_0_enter_DefaultMode_from_RESET();
-  VREG_0_enter_DefaultMode_from_RESET();
-  PORTS_0_enter_DefaultMode_from_RESET();
-  PORTS_1_enter_DefaultMode_from_RESET();
-  PORTS_3_enter_DefaultMode_from_RESET();
-  PBCFG_0_enter_DefaultMode_from_RESET();
-  CIP51_0_enter_DefaultMode_from_RESET();
-  CLOCK_0_enter_DefaultMode_from_RESET();
-  TIMER16_2_enter_DefaultMode_from_RESET();
-  INTERRUPT_0_enter_DefaultMode_from_RESET();
-  USBLIB_0_enter_DefaultMode_from_RESET();
-  // Restore the SFRPAGE
-  SFRPAGE = SFRPAGE_save;
-  // [Config Calls]$
-
-}
-
-//================================================================================
-// WDT_0_enter_DefaultMode_from_RESET
-//================================================================================
-extern void WDT_0_enter_DefaultMode_from_RESET(void)
-{
-  // $[WDTCN - Watchdog Timer Control]
-  SFRPAGE = 0x00;
-  //Disable Watchdog with key sequence
-  WDTCN = 0xDE; //First key
-  WDTCN = 0xAD; //Second key
-  // [WDTCN - Watchdog Timer Control]$
-
-}
-
-//================================================================================
-// VREG_0_enter_DefaultMode_from_RESET
-//================================================================================
-extern void VREG_0_enter_DefaultMode_from_RESET(void)
-{
-  // $[REG0CN - Voltage Regulator 0 Control]
-  // [REG0CN - Voltage Regulator 0 Control]$
-
-  // $[REG1CN - Voltage Regulator 1 Control]
-  /***********************************************************************
-   - Regulator is enabled
-   - Regulator bias is disabled
-   - The 5V regulator is in normal power mode
-   ***********************************************************************/
-  SFRPAGE = 0x20;
-  REG1CN = REG1CN_REG1ENB__ENABLED | REG1CN_BIASENB__DISABLED
-      | REG1CN_SUSEN__NORMAL;
-  // [REG1CN - Voltage Regulator 1 Control]$
-
-}
-
-//================================================================================
-// PORTS_0_enter_DefaultMode_from_RESET
-//================================================================================
-extern void PORTS_0_enter_DefaultMode_from_RESET(void)
-{
-  // $[P0 - Port 0 Pin Latch]
-  // [P0 - Port 0 Pin Latch]$
-
-  // $[P0MDOUT - Port 0 Output Mode]
-  /***********************************************************************
-   - P0.0 output is open-drain
-   - P0.1 output is push-pull
-   - P0.2 output is open-drain
-   - P0.3 output is push-pull
-   - P0.4 output is push-pull
-   - P0.5 output is open-drain
-   - P0.6 output is open-drain
-   - P0.7 output is open-drain
-   ***********************************************************************/
-  SFRPAGE = 0x00;
-  P0MDOUT = P0MDOUT_B0__OPEN_DRAIN | P0MDOUT_B1__PUSH_PULL
-      | P0MDOUT_B2__OPEN_DRAIN | P0MDOUT_B3__PUSH_PULL | P0MDOUT_B4__PUSH_PULL
-      | P0MDOUT_B5__OPEN_DRAIN | P0MDOUT_B6__OPEN_DRAIN
-      | P0MDOUT_B7__OPEN_DRAIN;
-  // [P0MDOUT - Port 0 Output Mode]$
-
-  // $[P0MDIN - Port 0 Input Mode]
-  // [P0MDIN - Port 0 Input Mode]$
-
-  // $[P0SKIP - Port 0 Skip]
-  /***********************************************************************
-   - P0.0 pin is not skipped by the crossbar
-   - P0.1 pin is not skipped by the crossbar
-   - P0.2 pin is not skipped by the crossbar
-   - P0.3 pin is skipped by the crossbar
-   - P0.4 pin is skipped by the crossbar
-   - P0.5 pin is skipped by the crossbar
-   - P0.6 pin is skipped by the crossbar
-   - P0.7 pin is skipped by the crossbar
-   ***********************************************************************/
-  P0SKIP = P0SKIP_B0__NOT_SKIPPED | P0SKIP_B1__NOT_SKIPPED
-      | P0SKIP_B2__NOT_SKIPPED | P0SKIP_B3__SKIPPED | P0SKIP_B4__SKIPPED
-      | P0SKIP_B5__SKIPPED | P0SKIP_B6__SKIPPED | P0SKIP_B7__SKIPPED;
-  // [P0SKIP - Port 0 Skip]$
-
-  // $[P0MASK - Port 0 Mask]
-  // [P0MASK - Port 0 Mask]$
-
-  // $[P0MAT - Port 0 Match]
-  // [P0MAT - Port 0 Match]$
-
-}
-
-//================================================================================
-// PORTS_1_enter_DefaultMode_from_RESET
-//================================================================================
-extern void PORTS_1_enter_DefaultMode_from_RESET(void)
-{
-  // $[P1 - Port 1 Pin Latch]
-  // [P1 - Port 1 Pin Latch]$
-
-  // $[P1MDOUT - Port 1 Output Mode]
-  /***********************************************************************
-   - P1.0 output is open-drain
-   - P1.1 output is push-pull
-   - P1.2 output is push-pull
-   ***********************************************************************/
-  P1MDOUT = P1MDOUT_B0__OPEN_DRAIN | P1MDOUT_B1__PUSH_PULL
-      | P1MDOUT_B2__PUSH_PULL;
-  // [P1MDOUT - Port 1 Output Mode]$
-
-  // $[P1MDIN - Port 1 Input Mode]
-  // [P1MDIN - Port 1 Input Mode]$
-
-  // $[P1SKIP - Port 1 Skip]
-  /***********************************************************************
-   - P1.0 pin is skipped by the crossbar
-   - P1.1 pin is not skipped by the crossbar
-   - P1.2 pin is skipped by the crossbar
-   ***********************************************************************/
-  P1SKIP = P1SKIP_B0__SKIPPED | P1SKIP_B1__NOT_SKIPPED | P1SKIP_B2__SKIPPED;
-  // [P1SKIP - Port 1 Skip]$
-
-  // $[P1MASK - Port 1 Mask]
-  // [P1MASK - Port 1 Mask]$
-
-  // $[P1MAT - Port 1 Match]
-  // [P1MAT - Port 1 Match]$
-
-}
-
-//================================================================================
-// PORTS_2_enter_DefaultMode_from_RESET
-//================================================================================
-extern void PORTS_2_enter_DefaultMode_from_RESET(void)
-{
-  // $[P2 - Port 2 Pin Latch]
-  // [P2 - Port 2 Pin Latch]$
-
-  // $[P2MDOUT - Port 2 Output Mode]
-  /*
-   // B0 (Port 2 Bit 0 Output Mode) = OPEN_DRAIN (P2.0 output is open-
-   //     drain.)
-   // B1 (Port 2 Bit 1 Output Mode) = OPEN_DRAIN (P2.1 output is open-
-   //     drain.)
-   // B2 (Port 2 Bit 2 Output Mode) = OPEN_DRAIN (P2.2 output is open-
-   //     drain.)
-   // B3 (Port 2 Bit 3 Output Mode) = PUSH_PULL (P2.3 output is push-pull.)
-   */
-  P2MDOUT = P2MDOUT_B0__OPEN_DRAIN | P2MDOUT_B1__OPEN_DRAIN
-      | P2MDOUT_B2__OPEN_DRAIN | P2MDOUT_B3__PUSH_PULL;
-  // [P2MDOUT - Port 2 Output Mode]$
-
-  // $[P2MDIN - Port 2 Input Mode]
-  // [P2MDIN - Port 2 Input Mode]$
-
-  // $[P2SKIP - Port 2 Skip]
-  /*
-   // B0 (Port 2 Bit 0 Skip) = NOT_SKIPPED (P2.0 pin is not skipped by the
-   //     crossbar.)
-   // B1 (Port 2 Bit 1 Skip) = NOT_SKIPPED (P2.1 pin is not skipped by the
-   //     crossbar.)
-   // B2 (Port 2 Bit 2 Skip) = NOT_SKIPPED (P2.2 pin is not skipped by the
-   //     crossbar.)
-   // B3 (Port 2 Bit 3 Skip) = SKIPPED (P2.3 pin is skipped by the
-   //     crossbar.)
-   */
-  SFRPAGE = 0x20;
-  P2SKIP = P2SKIP_B0__NOT_SKIPPED | P2SKIP_B1__NOT_SKIPPED
-      | P2SKIP_B2__NOT_SKIPPED | P2SKIP_B3__SKIPPED;
-  // [P2SKIP - Port 2 Skip]$
-
-  // $[P2MASK - Port 2 Mask]
-  // [P2MASK - Port 2 Mask]$
-
-  // $[P2MAT - Port 2 Match]
-  // [P2MAT - Port 2 Match]$
-
-}
-
-//================================================================================
-// PBCFG_0_enter_DefaultMode_from_RESET
-//================================================================================
-extern void PBCFG_0_enter_DefaultMode_from_RESET(void)
-{
-  // $[XBR2 - Port I/O Crossbar 2]
-  /***********************************************************************
-   - Weak Pullups enabled 
-   - Crossbar enabled
-   - UART1 I/O unavailable at Port pin
-   - UART1 RTS1 unavailable at Port pin
-   - UART1 CTS1 unavailable at Port pin
-   ***********************************************************************/
-  SFRPAGE = 0x00;
-  XBR2 = XBR2_WEAKPUD__PULL_UPS_ENABLED | XBR2_XBARE__ENABLED
-      | XBR2_URT1E__DISABLED | XBR2_URT1RTSE__DISABLED
-      | XBR2_URT1CTSE__DISABLED;
-  // [XBR2 - Port I/O Crossbar 2]$
-
-  // $[PRTDRV - Port Drive Strength]
-  // [PRTDRV - Port Drive Strength]$
-
-  // $[XBR0 - Port I/O Crossbar 0]
-  /***********************************************************************
-   - UART0 I/O unavailable at Port pin
-   - SPI I/O routed to Port pins
-   - SMBus 0 I/O unavailable at Port pins
-   - CP0 unavailable at Port pin
-   - Asynchronous CP0 unavailable at Port pin
-   - CP1 unavailable at Port pin
-   - Asynchronous CP1 unavailable at Port pin
-   - SYSCLK unavailable at Port pin
-   ***********************************************************************/
-  XBR0 = XBR0_URT0E__DISABLED | XBR0_SPI0E__ENABLED | XBR0_SMB0E__DISABLED
-      | XBR0_CP0E__DISABLED | XBR0_CP0AE__DISABLED | XBR0_CP1E__DISABLED
-      | XBR0_CP1AE__DISABLED | XBR0_SYSCKE__DISABLED;
-  // [XBR0 - Port I/O Crossbar 0]$
-
-  // $[XBR1 - Port I/O Crossbar 1]
-  // [XBR1 - Port I/O Crossbar 1]$
-
-}
-
-//================================================================================
-// ADC_0_enter_DefaultMode_from_RESET
-//================================================================================
-extern void ADC_0_enter_DefaultMode_from_RESET(void)
-{
-  // $[ADC0CN1 - ADC0 Control 1]
-  // [ADC0CN1 - ADC0 Control 1]$
-
-  // $[ADC0MX - ADC0 Multiplexer Selection]
-  /*
-   // ADC0MX (AMUX0 Positive Input Selection) = ADC0P15 (Select ADC0.15.)
-   */
-  ADC0MX = ADC0MX_ADC0MX__ADC0P15;
-  // [ADC0MX - ADC0 Multiplexer Selection]$
-
-  // $[ADC0CF - ADC0 Configuration]
-  /*
-   // ADSC (SAR Clock Divider) = 0x07
-   // AD8BE (8-Bit Mode Enable) = NORMAL (ADC0 operates in 10-bit or 12-bit
-   //     mode (normal operation).)
-   // ADGN (Gain Control) = GAIN_1 (The on-chip PGA gain is 1.)
-   // ADTM (Track Mode) = TRACK_NORMAL (Normal Track Mode. When ADC0 is
-   //     enabled, conversion begins immediately following the start-of-
-   //     conversion signal.)
-   */
-  ADC0CF = (0x07 << ADC0CF_ADSC__SHIFT) | ADC0CF_AD8BE__NORMAL
-      | ADC0CF_ADGN__GAIN_1 | ADC0CF_ADTM__TRACK_NORMAL;
-  // [ADC0CF - ADC0 Configuration]$
-
-  // $[ADC0AC - ADC0 Accumulator Configuration]
-  // [ADC0AC - ADC0 Accumulator Configuration]$
-
-  // $[ADC0TK - ADC0 Burst Mode Track Time]
-  // [ADC0TK - ADC0 Burst Mode Track Time]$
-
-  // $[ADC0PWR - ADC0 Power Control]
-  // [ADC0PWR - ADC0 Power Control]$
-
-  // $[ADC0GTH - ADC0 Greater-Than High Byte]
-  // [ADC0GTH - ADC0 Greater-Than High Byte]$
-
-  // $[ADC0GTL - ADC0 Greater-Than Low Byte]
-  // [ADC0GTL - ADC0 Greater-Than Low Byte]$
-
-  // $[ADC0LTH - ADC0 Less-Than High Byte]
-  // [ADC0LTH - ADC0 Less-Than High Byte]$
-
-  // $[ADC0LTL - ADC0 Less-Than Low Byte]
-  // [ADC0LTL - ADC0 Less-Than Low Byte]$
-
-  // $[ADC0CN0 - ADC0 Control 0]
-  /*
-   // ADEN (ADC Enable) = ENABLED (Enable ADC0 (active and ready for data
-   //     conversions).)
-   // ADCM (Start of Conversion Mode Select) = TIMER3 (ADC0 conversion
-   //     initiated on overflow of Timer 3.)
-   */
-  ADC0CN0 &= ~ADC0CN0_ADCM__FMASK;
-  ADC0CN0 |= ADC0CN0_ADEN__ENABLED | ADC0CN0_ADCM__TIMER3;
-  // [ADC0CN0 - ADC0 Control 0]$
-
-}
-
-//================================================================================
-// VREF_0_enter_DefaultMode_from_RESET
-//================================================================================
-extern void VREF_0_enter_DefaultMode_from_RESET(void)
-{
-  // $[REF0CN - Voltage Reference Control]
-  /*
-   // TEMPE (Temperature Sensor Enable) = TEMP_DISABLED (Disable the
-   //     Temperature Sensor.)
-   // GNDSL (Analog Ground Reference) = GND_PIN (The ADC0 ground reference
-   //     is the GND pin.)
-   // IREFLVL (Internal Voltage Reference Level) = 1P65 (The internal
-   //     reference operates at 1.65 V nominal.)
-   // REFSL (Voltage Reference Select) = VDD_PIN (The ADC0 voltage reference
-   //     is the VDD pin.)
-   */
-  REF0CN = REF0CN_TEMPE__TEMP_DISABLED | REF0CN_GNDSL__GND_PIN
-      | REF0CN_IREFLVL__1P65 | REF0CN_REFSL__VDD_PIN;
-  // [REF0CN - Voltage Reference Control]$
-
-}
-
-//================================================================================
-// LFOSC_0_enter_DefaultMode_from_RESET
-//================================================================================
-extern void LFOSC_0_enter_DefaultMode_from_RESET(void)
-{
-  // $[LFO0CN - Low Frequency Oscillator Control]
-  /*
-   // OSCLEN (Internal L-F Oscillator Enable) = ENABLED (Internal L-F
-   //     Oscillator Enabled.)
-   */
-  LFO0CN |= LFO0CN_OSCLEN__ENABLED;
-  // [LFO0CN - Low Frequency Oscillator Control]$
-
-  // $[Wait for LFOSC Ready]
-  while ((LFO0CN & LFO0CN_OSCLRDY__BMASK) != LFO0CN_OSCLRDY__SET)
-    ;
-  // [Wait for LFOSC Ready]$
-
-}
-
-//================================================================================
-// CLOCK_0_enter_DefaultMode_from_RESET
-//================================================================================
-extern void CLOCK_0_enter_DefaultMode_from_RESET(void)
-{
-  // $[HFOSC1 Setup]
-  // Ensure SYSCLK is > 24 MHz before switching to HFOSC1
-  SFRPAGE = 0x00;
-  CLKSEL = CLKSEL_CLKSL__HFOSC0 | CLKSEL_CLKDIV__SYSCLK_DIV_1;
-  while ((CLKSEL & CLKSEL_DIVRDY__BMASK) == CLKSEL_DIVRDY__NOT_READY)
-    ;
-  // [HFOSC1 Setup]$
-
-  // $[CLKSEL - Clock Select]
-  /***********************************************************************
-   - Clock derived from the Internal High Frequency Oscillator 1
-   - SYSCLK is equal to selected clock source divided by 1
-   ***********************************************************************/
-  CLKSEL = CLKSEL_CLKSL__HFOSC1 | CLKSEL_CLKDIV__SYSCLK_DIV_1;
-  while ((CLKSEL & CLKSEL_DIVRDY__BMASK) == CLKSEL_DIVRDY__NOT_READY)
-    ;
-  // [CLKSEL - Clock Select]$
-
-}
-
-//================================================================================
-// CIP51_0_enter_DefaultMode_from_RESET
-//================================================================================
-extern void CIP51_0_enter_DefaultMode_from_RESET(void)
-{
-  // $[PFE0CN - Prefetch Engine Control]
-  /***********************************************************************
-   - Enable the prefetch engine 
-   - SYSCLK < 50 MHz
-   ***********************************************************************/
-  SFRPAGE = 0x10;
-  PFE0CN = PFE0CN_PFEN__ENABLED | PFE0CN_FLRT__SYSCLK_BELOW_50_MHZ;
-  // [PFE0CN - Prefetch Engine Control]$
-
-}
-
-//================================================================================
-// INTERRUPT_0_enter_DefaultMode_from_RESET
-//================================================================================
-extern void INTERRUPT_0_enter_DefaultMode_from_RESET(void)
-{
-  // $[EIE1 - Extended Interrupt Enable 1]
-  // [EIE1 - Extended Interrupt Enable 1]$
-
-  // $[EIE2 - Extended Interrupt Enable 2]
-  // [EIE2 - Extended Interrupt Enable 2]$
-
-  // $[EIP1H - Extended Interrupt Priority 1 High]
-  // [EIP1H - Extended Interrupt Priority 1 High]$
-
-  // $[EIP1 - Extended Interrupt Priority 1 Low]
-  // [EIP1 - Extended Interrupt Priority 1 Low]$
-
-  // $[EIP2 - Extended Interrupt Priority 2]
-  // [EIP2 - Extended Interrupt Priority 2]$
-
-  // $[EIP2H - Extended Interrupt Priority 2 High]
-  // [EIP2H - Extended Interrupt Priority 2 High]$
-
-  // $[IE - Interrupt Enable]
-  /***********************************************************************
-   - Enable each interrupt according to its individual mask setting
-   - Disable external interrupt 0
-   - Disable external interrupt 1
-   - Disable all SPI0 interrupts
-   - Disable all Timer 0 interrupt
-   - Disable all Timer 1 interrupt
-   - Enable interrupt requests generated by the TF2L or TF2H flags
-   - Disable UART0 interrupt
-   ***********************************************************************/
-  IE = IE_EA__ENABLED | IE_EX0__DISABLED | IE_EX1__DISABLED | IE_ESPI0__DISABLED
-      | IE_ET0__DISABLED | IE_ET1__DISABLED | IE_ET2__ENABLED
-      | IE_ES0__DISABLED;
-  // [IE - Interrupt Enable]$
-
-  // $[IP - Interrupt Priority]
-  // [IP - Interrupt Priority]$
-
-  // $[IPH - Interrupt Priority High]
-  // [IPH - Interrupt Priority High]$
-
-}
-
-//================================================================================
-// USBLIB_0_enter_DefaultMode_from_RESET
-//================================================================================
-extern void USBLIB_0_enter_DefaultMode_from_RESET(void)
-{
-  // $[USBD Init]
-  USBD_Init (&initstruct);
-  // [USBD Init]$
-
-}
-
-extern void TIMER16_2_enter_DefaultMode_from_RESET(void)
-{
-  // $[Timer Initialization]
-  // Save Timer Configuration
-  uint8_t TMR2CN0_TR2_save;
-  TMR2CN0_TR2_save = TMR2CN0 & TMR2CN0_TR2__BMASK;
-  // Stop Timer
-  TMR2CN0 &= ~(TMR2CN0_TR2__BMASK);
-  // [Timer Initialization]$
-
-  // $[TMR2CN1 - Timer 2 Control 1]
-  // [TMR2CN1 - Timer 2 Control 1]$
-
-  // $[TMR2CN0 - Timer 2 Control]
-  // [TMR2CN0 - Timer 2 Control]$
-
-  // $[TMR2H - Timer 2 High Byte]
-  /***********************************************************************
-   - Timer 2 High Byte = 0xF0
-   ***********************************************************************/
-  TMR2H = (0xF0 << TMR2H_TMR2H__SHIFT);
-  // [TMR2H - Timer 2 High Byte]$
-
-  // $[TMR2L - Timer 2 Low Byte]
-  /***********************************************************************
-   - Timer 2 Low Byte = 0x60
-   ***********************************************************************/
-  TMR2L = (0x60 << TMR2L_TMR2L__SHIFT);
-  // [TMR2L - Timer 2 Low Byte]$
-
-  // $[TMR2RLH - Timer 2 Reload High Byte]
-  /***********************************************************************
-   - Timer 2 Reload High Byte = 0xF0
-   ***********************************************************************/
-  TMR2RLH = (0xF0 << TMR2RLH_TMR2RLH__SHIFT);
-  // [TMR2RLH - Timer 2 Reload High Byte]$
-
-  // $[TMR2RLL - Timer 2 Reload Low Byte]
-  /***********************************************************************
-   - Timer 2 Reload Low Byte = 0x60
-   ***********************************************************************/
-  TMR2RLL = (0x60 << TMR2RLL_TMR2RLL__SHIFT);
-  // [TMR2RLL - Timer 2 Reload Low Byte]$
-
-  // $[TMR2CN0]
-  /***********************************************************************
-   - Start Timer 2 running
-   ***********************************************************************/
-  TMR2CN0 |= TMR2CN0_TR2__RUN;
-  // [TMR2CN0]$
-
-  // $[Timer Restoration]
-  // Restore Timer Configuration
-  TMR2CN0 |= TMR2CN0_TR2_save;
-  // [Timer Restoration]$
-
-}
-
-extern void PORTS_3_enter_DefaultMode_from_RESET(void)
-{
-  // $[P3 - Port 3 Pin Latch]
-  // [P3 - Port 3 Pin Latch]$
-
-  // $[P3MDOUT - Port 3 Output Mode]
-  /***********************************************************************
-   - P3.1 output is push-pull
-   ***********************************************************************/
-  SFRPAGE = 0x20;
-  P3MDOUT = P3MDOUT_B1__PUSH_PULL;
-  // [P3MDOUT - Port 3 Output Mode]$
-
-  // $[P3MDIN - Port 3 Input Mode]
-  // [P3MDIN - Port 3 Input Mode]$
-
-}
 
 extern void enter_FlashMode_from_RESET(void)
 {
@@ -910,6 +391,222 @@ extern void SPI_0_enter_FlashMode_from_RESET(void)
    - 3-Wire Slave or 3-Wire Master Mode
    ***********************************************************************/
   SPI0CN0 &= ~SPI0CN0_NSSMD__FMASK;
+  SPI0CN0 |= SPI0CN0_SPIEN__ENABLED;
+  // [SPI0CN0 - SPI0 Control]$
+
+}
+
+extern void enter_ButtonMode_from_FlashMode(void)
+{
+  // $[Config Calls]
+  // Save the SFRPAGE
+  uint8_t SFRPAGE_save = SFRPAGE;
+  PORTS_0_enter_ButtonMode_from_FlashMode();
+  PBCFG_0_enter_ButtonMode_from_FlashMode();
+  // Restore the SFRPAGE
+  SFRPAGE = SFRPAGE_save;
+  // [Config Calls]$
+
+}
+
+extern void PORTS_0_enter_ButtonMode_from_FlashMode(void)
+{
+  // $[P0 - Port 0 Pin Latch]
+  // [P0 - Port 0 Pin Latch]$
+
+  // $[P0MDOUT - Port 0 Output Mode]
+  /***********************************************************************
+   - P0.0 output is open-drain
+   - P0.1 output is push-pull
+   - P0.2 output is open-drain
+   - P0.3 output is push-pull
+   - P0.4 output is push-pull
+   - P0.5 output is open-drain
+   - P0.6 output is open-drain
+   - P0.7 output is open-drain
+   ***********************************************************************/
+  SFRPAGE = 0x00;
+  P0MDOUT = P0MDOUT_B0__OPEN_DRAIN | P0MDOUT_B1__PUSH_PULL
+      | P0MDOUT_B2__OPEN_DRAIN | P0MDOUT_B3__PUSH_PULL | P0MDOUT_B4__PUSH_PULL
+      | P0MDOUT_B5__OPEN_DRAIN | P0MDOUT_B6__OPEN_DRAIN
+      | P0MDOUT_B7__OPEN_DRAIN;
+  // [P0MDOUT - Port 0 Output Mode]$
+
+  // $[P0MDIN - Port 0 Input Mode]
+  // [P0MDIN - Port 0 Input Mode]$
+
+  // $[P0SKIP - Port 0 Skip]
+  /***********************************************************************
+   - P0.0 pin is skipped by the crossbar
+   - P0.1 pin is not skipped by the crossbar
+   - P0.2 pin is skipped by the crossbar
+   - P0.3 pin is skipped by the crossbar
+   - P0.4 pin is skipped by the crossbar
+   - P0.5 pin is skipped by the crossbar
+   - P0.6 pin is skipped by the crossbar
+   - P0.7 pin is skipped by the crossbar
+   ***********************************************************************/
+  P0SKIP = P0SKIP_B0__SKIPPED | P0SKIP_B1__NOT_SKIPPED | P0SKIP_B2__SKIPPED
+      | P0SKIP_B3__SKIPPED | P0SKIP_B4__SKIPPED | P0SKIP_B5__SKIPPED
+      | P0SKIP_B6__SKIPPED | P0SKIP_B7__SKIPPED;
+  // [P0SKIP - Port 0 Skip]$
+
+  // $[P0MASK - Port 0 Mask]
+  // [P0MASK - Port 0 Mask]$
+
+  // $[P0MAT - Port 0 Match]
+  // [P0MAT - Port 0 Match]$
+
+}
+
+extern void PBCFG_0_enter_ButtonMode_from_FlashMode(void)
+{
+  // $[XBR2 - Port I/O Crossbar 2]
+  // [XBR2 - Port I/O Crossbar 2]$
+
+  // $[PRTDRV - Port Drive Strength]
+  // [PRTDRV - Port Drive Strength]$
+
+  // $[XBR0 - Port I/O Crossbar 0]
+  /***********************************************************************
+   - UART0 I/O unavailable at Port pin
+   - SPI I/O unavailable at Port pins
+   - SMBus 0 I/O unavailable at Port pins
+   - CP0 unavailable at Port pin
+   - Asynchronous CP0 unavailable at Port pin
+   - CP1 unavailable at Port pin
+   - Asynchronous CP1 unavailable at Port pin
+   - SYSCLK unavailable at Port pin
+   ***********************************************************************/
+  XBR0 = XBR0_URT0E__DISABLED | XBR0_SPI0E__DISABLED | XBR0_SMB0E__DISABLED
+      | XBR0_CP0E__DISABLED | XBR0_CP0AE__DISABLED | XBR0_CP1E__DISABLED
+      | XBR0_CP1AE__DISABLED | XBR0_SYSCKE__DISABLED;
+  // [XBR0 - Port I/O Crossbar 0]$
+
+  // $[XBR1 - Port I/O Crossbar 1]
+  // [XBR1 - Port I/O Crossbar 1]$
+
+}
+
+extern void enter_FlashMode_from_ButtonMode(void)
+{
+  // $[Config Calls]
+  // Save the SFRPAGE
+  uint8_t SFRPAGE_save = SFRPAGE;
+  PORTS_0_enter_FlashMode_from_ButtonMode();
+  PBCFG_0_enter_FlashMode_from_ButtonMode();
+  SPI_0_enter_FlashMode_from_ButtonMode();
+  // Restore the SFRPAGE
+  SFRPAGE = SFRPAGE_save;
+  // [Config Calls]$
+
+}
+
+extern void PORTS_0_enter_FlashMode_from_ButtonMode(void)
+{
+  // $[P0 - Port 0 Pin Latch]
+  // [P0 - Port 0 Pin Latch]$
+
+  // $[P0MDOUT - Port 0 Output Mode]
+  /***********************************************************************
+   - P0.0 output is push-pull
+   - P0.1 output is open-drain
+   - P0.2 output is push-pull
+   - P0.3 output is push-pull
+   - P0.4 output is push-pull
+   - P0.5 output is open-drain
+   - P0.6 output is open-drain
+   - P0.7 output is open-drain
+   ***********************************************************************/
+  SFRPAGE = 0x00;
+  P0MDOUT = P0MDOUT_B0__PUSH_PULL | P0MDOUT_B1__OPEN_DRAIN
+      | P0MDOUT_B2__PUSH_PULL | P0MDOUT_B3__PUSH_PULL | P0MDOUT_B4__PUSH_PULL
+      | P0MDOUT_B5__OPEN_DRAIN | P0MDOUT_B6__OPEN_DRAIN
+      | P0MDOUT_B7__OPEN_DRAIN;
+  // [P0MDOUT - Port 0 Output Mode]$
+
+  // $[P0MDIN - Port 0 Input Mode]
+  // [P0MDIN - Port 0 Input Mode]$
+
+  // $[P0SKIP - Port 0 Skip]
+  /***********************************************************************
+   - P0.0 pin is not skipped by the crossbar
+   - P0.1 pin is not skipped by the crossbar
+   - P0.2 pin is not skipped by the crossbar
+   - P0.3 pin is skipped by the crossbar
+   - P0.4 pin is skipped by the crossbar
+   - P0.5 pin is skipped by the crossbar
+   - P0.6 pin is skipped by the crossbar
+   - P0.7 pin is skipped by the crossbar
+   ***********************************************************************/
+  P0SKIP = P0SKIP_B0__NOT_SKIPPED | P0SKIP_B1__NOT_SKIPPED
+      | P0SKIP_B2__NOT_SKIPPED | P0SKIP_B3__SKIPPED | P0SKIP_B4__SKIPPED
+      | P0SKIP_B5__SKIPPED | P0SKIP_B6__SKIPPED | P0SKIP_B7__SKIPPED;
+  // [P0SKIP - Port 0 Skip]$
+
+  // $[P0MASK - Port 0 Mask]
+  // [P0MASK - Port 0 Mask]$
+
+  // $[P0MAT - Port 0 Match]
+  // [P0MAT - Port 0 Match]$
+
+}
+
+extern void PBCFG_0_enter_FlashMode_from_ButtonMode(void)
+{
+  // $[XBR2 - Port I/O Crossbar 2]
+  // [XBR2 - Port I/O Crossbar 2]$
+
+  // $[PRTDRV - Port Drive Strength]
+  // [PRTDRV - Port Drive Strength]$
+
+  // $[XBR0 - Port I/O Crossbar 0]
+  /***********************************************************************
+   - UART0 I/O unavailable at Port pin
+   - SPI I/O routed to Port pins
+   - SMBus 0 I/O unavailable at Port pins
+   - CP0 unavailable at Port pin
+   - Asynchronous CP0 unavailable at Port pin
+   - CP1 unavailable at Port pin
+   - Asynchronous CP1 unavailable at Port pin
+   - SYSCLK unavailable at Port pin
+   ***********************************************************************/
+  XBR0 = XBR0_URT0E__DISABLED | XBR0_SPI0E__ENABLED | XBR0_SMB0E__DISABLED
+      | XBR0_CP0E__DISABLED | XBR0_CP0AE__DISABLED | XBR0_CP1E__DISABLED
+      | XBR0_CP1AE__DISABLED | XBR0_SYSCKE__DISABLED;
+  // [XBR0 - Port I/O Crossbar 0]$
+
+  // $[XBR1 - Port I/O Crossbar 1]
+  // [XBR1 - Port I/O Crossbar 1]$
+
+}
+
+extern void SPI_0_enter_FlashMode_from_ButtonMode(void)
+{
+  // $[SPI0CKR - SPI0 Clock Rate]
+  /***********************************************************************
+   - SPI0 Clock Rate = 0x01
+   ***********************************************************************/
+  SPI0CKR = (0x01 << SPI0CKR_SPI0CKR__SHIFT);
+  // [SPI0CKR - SPI0 Clock Rate]$
+
+  // $[SPI0FCN0 - SPI0 FIFO Control 0]
+  // [SPI0FCN0 - SPI0 FIFO Control 0]$
+
+  // $[SPI0FCN1 - SPI0 FIFO Control 1]
+  // [SPI0FCN1 - SPI0 FIFO Control 1]$
+
+  // $[SPI0CFG - SPI0 Configuration]
+  /***********************************************************************
+   - Enable master mode. Operate as a master
+   ***********************************************************************/
+  SPI0CFG |= SPI0CFG_MSTEN__MASTER_ENABLED;
+  // [SPI0CFG - SPI0 Configuration]$
+
+  // $[SPI0CN0 - SPI0 Control]
+  /***********************************************************************
+   - Enable the SPI module
+   ***********************************************************************/
   SPI0CN0 |= SPI0CN0_SPIEN__ENABLED;
   // [SPI0CN0 - SPI0 Control]$
 

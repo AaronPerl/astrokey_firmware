@@ -114,7 +114,7 @@
   </mode>
   <mode name="ButtonMode">
     <property object="ADC_0" propertyId="adc.configuration.sarclockdivider" value="6"/>
-    <property object="ButtonMode" propertyId="mode.diagramLocation" value="110, 110"/>
+    <property object="ButtonMode" propertyId="mode.diagramLocation" value="323, 99"/>
     <property object="CIP51_0" propertyId="ABPeripheral.included" value="true"/>
     <property object="CIP51_0" propertyId="cip51.prefetchenginecontrol.enableprefetch" value="Enabled"/>
     <property object="CIP51_0" propertyId="cip51.prefetchenginecontrol.flashreadtiming" value="SYSCLK is below 50 MHz"/>
@@ -220,5 +220,13 @@
   <modeTransition>
     <property object="RESET &#x2192; FlashMode" propertyId="modeTransition.source" value="RESET"/>
     <property object="RESET &#x2192; FlashMode" propertyId="modeTransition.target" value="FlashMode"/>
+  </modeTransition>
+  <modeTransition>
+    <property object="FlashMode &#x2192; ButtonMode" propertyId="modeTransition.source" value="FlashMode"/>
+    <property object="FlashMode &#x2192; ButtonMode" propertyId="modeTransition.target" value="ButtonMode"/>
+  </modeTransition>
+  <modeTransition>
+    <property object="ButtonMode &#x2192; FlashMode" propertyId="modeTransition.source" value="ButtonMode"/>
+    <property object="ButtonMode &#x2192; FlashMode" propertyId="modeTransition.target" value="FlashMode"/>
   </modeTransition>
 </device:XMLDevice>

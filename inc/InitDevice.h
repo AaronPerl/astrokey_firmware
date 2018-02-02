@@ -13,6 +13,8 @@
 
 // $[Mode Transition Prototypes]
 extern void enter_FlashMode_from_RESET(void);
+extern void enter_ButtonMode_from_FlashMode(void);
+extern void enter_FlashMode_from_ButtonMode(void);
 // [Mode Transition Prototypes]$
 
 // $[Config(Per-Module Mode)Transition Prototypes]
@@ -28,6 +30,11 @@ extern void TIMER16_2_enter_FlashMode_from_RESET(void);
 extern void SPI_0_enter_FlashMode_from_RESET(void);
 extern void INTERRUPT_0_enter_FlashMode_from_RESET(void);
 extern void USBLIB_0_enter_FlashMode_from_RESET(void);
+extern void PORTS_0_enter_ButtonMode_from_FlashMode(void);
+extern void PBCFG_0_enter_ButtonMode_from_FlashMode(void);
+extern void PORTS_0_enter_FlashMode_from_ButtonMode(void);
+extern void PBCFG_0_enter_FlashMode_from_ButtonMode(void);
+extern void SPI_0_enter_FlashMode_from_ButtonMode(void);
 // [Config(Per-Module Mode)Transition Prototypes]$
 
 #endif
