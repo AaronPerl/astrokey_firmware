@@ -155,7 +155,7 @@
 							</tool>
 							<tool command="LX51" id="com.silabs.ide.si8051.keil.toolchain.linker.1670833202" name="Keil 8051 Linker" superClass="com.silabs.ide.si8051.keil.toolchain.linker">
 								<option id="com.silabs.ide.si8051.keil.linker.category.ordering.selection.483170182" name="Linker input ordering" superClass="com.silabs.ide.si8051.keil.linker.category.ordering.selection" value="./src/InitDevice.OBJ;./src/SILABS_STARTUP.OBJ;./src/callback.OBJ;./src/descriptors.OBJ;./src/idle.OBJ;./src/main.OBJ;./lib/efm8ub1/peripheralDrivers/src/usb_0.OBJ;./lib/efm8_usb/src/efm8_usbd.OBJ;./lib/efm8_usb/src/efm8_usbdch9.OBJ;./lib/efm8_usb/src/efm8_usbdep.OBJ;./lib/efm8_usb/src/efm8_usbdint.OBJ;./lib/efm8_assert/assert.OBJ" valueType="string"/>
-								<option id="com.silabs.ide.si8051.keil.linker.category.general.use_control_file.878002562" name="Use linker control file" superClass="com.silabs.ide.si8051.keil.linker.category.general.use_control_file" value="true" valueType="boolean"/>
+								<option id="com.silabs.ide.si8051.keil.linker.category.general.use_control_file.878002562" name="Use linker control file" superClass="com.silabs.ide.si8051.keil.linker.category.general.use_control_file" value="false" valueType="boolean"/>
 								<inputType id="com.silabs.ide.si8051.keil.linker.inputType.1119462710" superClass="com.silabs.ide.si8051.keil.linker.inputType"/>
 							</tool>
 							<tool id="com.silabs.ide.si8051.keil.toolchain.librarian.561607677" name="Keil 8051 Library Manager" superClass="com.silabs.ide.si8051.keil.toolchain.librarian"/>
@@ -170,7 +170,7 @@
 			<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
 		</cconfiguration>
 	</storageModule>
-	<storageModule moduleId="com.silabs.ss.framework.ide.project.core.cpp" project.generation="21" projectCommon.boardIds="com.silabs.board.none:0.0.0" projectCommon.buildArtifactType="EXE" projectCommon.importModeId="LINK_LIBRARIES" projectCommon.partId="mcu.8051.efm8.ub1.efm8ub10f16g-c-qfn20" projectCommon.sdkId="com.silabs.sdk.8051:4.0.2._-963069519"/>
+	<storageModule moduleId="com.silabs.ss.framework.ide.project.core.cpp" project.generation="25" projectCommon.boardIds="com.silabs.board.none:0.0.0" projectCommon.buildArtifactType="EXE" projectCommon.importModeId="LINK_LIBRARIES" projectCommon.partId="mcu.8051.efm8.ub1.efm8ub10f16g-c-qfn20" projectCommon.sdkId="com.silabs.sdk.8051:4.0.2._-963069519"/>
 	<storageModule moduleId="cdtBuildSystem" version="4.0.0">
 		<project id="AstroKey.com.silabs.ss.framework.ide.project.core.cdt.cdtMbsProjectType.1514316460" name="SLS CDT Project" projectType="com.silabs.ss.framework.ide.project.core.cdt.cdtMbsProjectType"/>
 	</storageModule>

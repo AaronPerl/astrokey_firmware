@@ -43,6 +43,8 @@
     <property object="P1.2" propertyId="ports.settings.label" value="L1"/>
     <property object="P1.2" propertyId="ports.settings.outputmode" value="Push-pull"/>
     <property object="P1.2" propertyId="ports.settings.skip" value="Skipped"/>
+    <property object="P2.0" propertyId="ports.settings.label" value="S0"/>
+    <property object="P2.0" propertyId="ports.settings.skip" value="Skipped"/>
     <property object="P3.1" propertyId="ports.settings.iomode" value="Digital Push-Pull Output"/>
     <property object="P3.1" propertyId="ports.settings.label" value="L2"/>
     <property object="P3.1" propertyId="ports.settings.outputmode" value="Push-pull"/>
@@ -154,6 +156,8 @@
     <property object="P1.2" propertyId="ports.settings.label" value="L1"/>
     <property object="P1.2" propertyId="ports.settings.outputmode" value="Push-pull"/>
     <property object="P1.2" propertyId="ports.settings.skip" value="Skipped"/>
+    <property object="P2.0" propertyId="ports.settings.label" value="S0"/>
+    <property object="P2.0" propertyId="ports.settings.skip" value="Skipped"/>
     <property object="P3.1" propertyId="ports.settings.iomode" value="Digital Push-Pull Output"/>
     <property object="P3.1" propertyId="ports.settings.label" value="L2"/>
     <property object="P3.1" propertyId="ports.settings.outputmode" value="Push-pull"/>

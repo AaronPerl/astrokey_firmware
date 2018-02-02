@@ -19,11 +19,11 @@
 
 // Switch configuration
 #define NUM_SWITCHES 5
-#define S0 P0_B0
-#define S1 P0_B1
-#define S2 P0_B2
-#define S3 P0_B3
-#define S4 P0_B4
+#define S0 P2_B0
+#define S1 P1_B0
+#define S2 P0_B7
+#define S3 P0_B6
+#define S4 P0_B5
 
 // Switch pressed
 #define PRESSED(x) (!x)

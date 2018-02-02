@@ -292,7 +292,7 @@ uint8_t checkKeyReleased(uint8_t bitMask, uint8_t pressed)
 // ----------------------------------------------------------------------------
 int16_t main(void)
 {
-  enter_DefaultMode_from_RESET();
+  enter_FlashMode_from_RESET();
   /*if (PRESSED(S0))
   {
     *((uint8_t SI_SEG_DATA *) 0x00) = 0xA5;

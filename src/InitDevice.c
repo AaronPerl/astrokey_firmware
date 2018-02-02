@@ -32,6 +32,7 @@ extern void enter_FlashMode_from_RESET(void)
   VREG_0_enter_FlashMode_from_RESET();
   PORTS_0_enter_FlashMode_from_RESET();
   PORTS_1_enter_FlashMode_from_RESET();
+  PORTS_2_enter_FlashMode_from_RESET();
   PORTS_3_enter_FlashMode_from_RESET();
   PBCFG_0_enter_FlashMode_from_RESET();
   CIP51_0_enter_FlashMode_from_RESET();
@@ -169,7 +170,6 @@ extern void PORTS_3_enter_FlashMode_from_RESET(void)
   /***********************************************************************
    - P3.1 output is push-pull
    ***********************************************************************/
-  SFRPAGE = 0x20;
   P3MDOUT = P3MDOUT_B1__PUSH_PULL;
   // [P3MDOUT - Port 3 Output Mode]$
 
@@ -609,6 +609,87 @@ extern void SPI_0_enter_FlashMode_from_ButtonMode(void)
    ***********************************************************************/
   SPI0CN0 |= SPI0CN0_SPIEN__ENABLED;
   // [SPI0CN0 - SPI0 Control]$
+
+}
+
+extern void PORTS_2_enter_ButtonMode_from_FlashMode(void)
+{
+  // $[P2 - Port 2 Pin Latch]
+  // [P2 - Port 2 Pin Latch]$
+
+  // $[P2MDOUT - Port 2 Output Mode]
+  // [P2MDOUT - Port 2 Output Mode]$
+
+  // $[P2MDIN - Port 2 Input Mode]
+  // [P2MDIN - Port 2 Input Mode]$
+
+  // $[P2SKIP - Port 2 Skip]
+  /***********************************************************************
+   - P2.0 pin is skipped by the crossbar
+   ***********************************************************************/
+  SFRPAGE = 0x20;
+  P2SKIP = P2SKIP_B0__SKIPPED;
+  // [P2SKIP - Port 2 Skip]$
+
+  // $[P2MASK - Port 2 Mask]
+  // [P2MASK - Port 2 Mask]$
+
+  // $[P2MAT - Port 2 Match]
+  // [P2MAT - Port 2 Match]$
+
+}
+
+extern void PORTS_2_enter_FlashMode_from_ButtonMode(void)
+{
+  // $[P2 - Port 2 Pin Latch]
+  // [P2 - Port 2 Pin Latch]$
+
+  // $[P2MDOUT - Port 2 Output Mode]
+  // [P2MDOUT - Port 2 Output Mode]$
+
+  // $[P2MDIN - Port 2 Input Mode]
+  // [P2MDIN - Port 2 Input Mode]$
+
+  // $[P2SKIP - Port 2 Skip]
+  /***********************************************************************
+   - P2.0 pin is not skipped by the crossbar
+   ***********************************************************************/
+  SFRPAGE = 0x20;
+  P2SKIP = P2SKIP_B0__NOT_SKIPPED;
+  // [P2SKIP - Port 2 Skip]$
+
+  // $[P2MASK - Port 2 Mask]
+  // [P2MASK - Port 2 Mask]$
+
+  // $[P2MAT - Port 2 Match]
+  // [P2MAT - Port 2 Match]$
+
+}
+
+extern void PORTS_2_enter_FlashMode_from_RESET(void)
+{
+  // $[P2 - Port 2 Pin Latch]
+  // [P2 - Port 2 Pin Latch]$
+
+  // $[P2MDOUT - Port 2 Output Mode]
+  // [P2MDOUT - Port 2 Output Mode]$
+
+  // $[P2MDIN - Port 2 Input Mode]
+  // [P2MDIN - Port 2 Input Mode]$
+
+  // $[P2SKIP - Port 2 Skip]
+  /***********************************************************************
+   - P2.0 pin is skipped by the crossbar
+   ***********************************************************************/
+  SFRPAGE = 0x20;
+  P2SKIP = P2SKIP_B0__SKIPPED;
+  // [P2SKIP - Port 2 Skip]$
+
+  // $[P2MASK - Port 2 Mask]
+  // [P2MASK - Port 2 Mask]$
+
+  // $[P2MAT - Port 2 Match]
+  // [P2MAT - Port 2 Match]$
 
 }
 

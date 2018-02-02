@@ -22,6 +22,7 @@ extern void WDT_0_enter_FlashMode_from_RESET(void);
 extern void VREG_0_enter_FlashMode_from_RESET(void);
 extern void PORTS_0_enter_FlashMode_from_RESET(void);
 extern void PORTS_1_enter_FlashMode_from_RESET(void);
+extern void PORTS_2_enter_FlashMode_from_RESET(void);
 extern void PORTS_3_enter_FlashMode_from_RESET(void);
 extern void PBCFG_0_enter_FlashMode_from_RESET(void);
 extern void CIP51_0_enter_FlashMode_from_RESET(void);
