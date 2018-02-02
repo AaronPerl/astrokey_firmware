@@ -59,9 +59,19 @@
 			<locationURI>STUDIO_SDK_LOC/Lib/efm8_usb/src/efm8_usbdint.c</locationURI>
 		</link>
 		<link>
+			<name>lib/efm8ub1/peripheralDrivers/inc/spi_0.h</name>
+			<type>1</type>
+			<locationURI>STUDIO_SDK_LOC/Device/EFM8UB1/peripheral_driver/inc/spi_0.h</locationURI>
+		</link>
+		<link>
 			<name>lib/efm8ub1/peripheralDrivers/inc/usb_0.h</name>
 			<type>1</type>
 			<locationURI>STUDIO_SDK_LOC/Device/EFM8UB1/peripheral_driver/inc/usb_0.h</locationURI>
+		</link>
+		<link>
+			<name>lib/efm8ub1/peripheralDrivers/src/spi_0.c</name>
+			<type>1</type>
+			<locationURI>STUDIO_SDK_LOC/Device/EFM8UB1/peripheral_driver/src/spi_0.c</locationURI>
 		</link>
 		<link>
 			<name>lib/efm8ub1/peripheralDrivers/src/usb_0.c</name>

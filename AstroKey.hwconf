@@ -15,19 +15,15 @@
     <property object="INTERRUPT_0" propertyId="interrupt.interruptenable.enabletimer2interrupt" value="Enabled"/>
     <property object="INTERRUPT_0" propertyId="interruptenables.codegenerationoptions.generateinterruptfunctions" value="Disabled"/>
     <property object="P0.0" propertyId="ports.settings.iomode" value="Digital Push-Pull Output"/>
-    <property object="P0.0" propertyId="ports.settings.label" value="B1"/>
     <property object="P0.0" propertyId="ports.settings.outputmode" value="Push-pull"/>
     <property object="P0.2" propertyId="ports.settings.iomode" value="Digital Push-Pull Output"/>
-    <property object="P0.2" propertyId="ports.settings.label" value="B0"/>
     <property object="P0.2" propertyId="ports.settings.outputmode" value="Push-pull"/>
     <property object="P0.3" propertyId="ports.settings.iomode" value="Digital Push-Pull Output"/>
     <property object="P0.3" propertyId="ports.settings.label" value="D_LED"/>
     <property object="P0.3" propertyId="ports.settings.outputmode" value="Push-pull"/>
     <property object="P0.3" propertyId="ports.settings.skip" value="Skipped"/>
     <property object="P0.4" propertyId="ports.settings.iomode" value="Digital Push-Pull Output"/>
-    <property object="P0.4" propertyId="ports.settings.label" value="CS"/>
     <property object="P0.4" propertyId="ports.settings.outputmode" value="Push-pull"/>
-    <property object="P0.4" propertyId="ports.settings.skip" value="Skipped"/>
     <property object="P0.5" propertyId="ports.settings.label" value="S4"/>
     <property object="P0.5" propertyId="ports.settings.skip" value="Skipped"/>
     <property object="P0.6" propertyId="ports.settings.label" value="S3"/>
@@ -39,6 +35,7 @@
     <property object="P1.1" propertyId="ports.settings.iomode" value="Digital Push-Pull Output"/>
     <property object="P1.1" propertyId="ports.settings.label" value="L0"/>
     <property object="P1.1" propertyId="ports.settings.outputmode" value="Push-pull"/>
+    <property object="P1.1" propertyId="ports.settings.skip" value="Skipped"/>
     <property object="P1.2" propertyId="ports.settings.iomode" value="Digital Push-Pull Output"/>
     <property object="P1.2" propertyId="ports.settings.label" value="L1"/>
     <property object="P1.2" propertyId="ports.settings.outputmode" value="Push-pull"/>
@@ -58,7 +55,8 @@
     <property object="SPI_0" propertyId="spi.clockrate.sysclkdividercoefficientspi0ckr" value="1"/>
     <property object="SPI_0" propertyId="spi.configuration.enablemastermode" value="Enable"/>
     <property object="SPI_0" propertyId="spi.configuration.spimode" value="Master"/>
-    <property object="SPI_0" propertyId="spi.control.slaveselectmode" value="Slave or master 3-wire mode"/>
+    <property object="SPI_0" propertyId="spi.control.busmodemaster" value="Single-master 4-wire mode, NSS low"/>
+    <property object="SPI_0" propertyId="spi.control.slaveselectmode" value="Single-master 4-wire mode, NSS low"/>
     <property object="SPI_0" propertyId="spi.control.spienable" value="Enabled"/>
     <property object="TIMER01_0" propertyId="ABPeripheral.included" value="true"/>
     <property object="TIMER16_2" propertyId="ABPeripheral.included" value="true"/>
@@ -138,9 +136,7 @@
     <property object="P0.3" propertyId="ports.settings.outputmode" value="Push-pull"/>
     <property object="P0.3" propertyId="ports.settings.skip" value="Skipped"/>
     <property object="P0.4" propertyId="ports.settings.iomode" value="Digital Push-Pull Output"/>
-    <property object="P0.4" propertyId="ports.settings.label" value="CS"/>
     <property object="P0.4" propertyId="ports.settings.outputmode" value="Push-pull"/>
-    <property object="P0.4" propertyId="ports.settings.skip" value="Skipped"/>
     <property object="P0.5" propertyId="ports.settings.label" value="S4"/>
     <property object="P0.5" propertyId="ports.settings.skip" value="Skipped"/>
     <property object="P0.6" propertyId="ports.settings.label" value="S3"/>
@@ -152,6 +148,7 @@
     <property object="P1.1" propertyId="ports.settings.iomode" value="Digital Push-Pull Output"/>
     <property object="P1.1" propertyId="ports.settings.label" value="L0"/>
     <property object="P1.1" propertyId="ports.settings.outputmode" value="Push-pull"/>
+    <property object="P1.1" propertyId="ports.settings.skip" value="Skipped"/>
     <property object="P1.2" propertyId="ports.settings.iomode" value="Digital Push-Pull Output"/>
     <property object="P1.2" propertyId="ports.settings.label" value="L1"/>
     <property object="P1.2" propertyId="ports.settings.outputmode" value="Push-pull"/>

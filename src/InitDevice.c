@@ -108,13 +108,13 @@ extern void PORTS_0_enter_FlashMode_from_RESET(void)
    - P0.1 pin is not skipped by the crossbar
    - P0.2 pin is not skipped by the crossbar
    - P0.3 pin is skipped by the crossbar
-   - P0.4 pin is skipped by the crossbar
+   - P0.4 pin is not skipped by the crossbar
    - P0.5 pin is skipped by the crossbar
    - P0.6 pin is skipped by the crossbar
    - P0.7 pin is skipped by the crossbar
    ***********************************************************************/
   P0SKIP = P0SKIP_B0__NOT_SKIPPED | P0SKIP_B1__NOT_SKIPPED
-      | P0SKIP_B2__NOT_SKIPPED | P0SKIP_B3__SKIPPED | P0SKIP_B4__SKIPPED
+      | P0SKIP_B2__NOT_SKIPPED | P0SKIP_B3__SKIPPED | P0SKIP_B4__NOT_SKIPPED
       | P0SKIP_B5__SKIPPED | P0SKIP_B6__SKIPPED | P0SKIP_B7__SKIPPED;
   // [P0SKIP - Port 0 Skip]$
 
@@ -147,10 +147,10 @@ extern void PORTS_1_enter_FlashMode_from_RESET(void)
   // $[P1SKIP - Port 1 Skip]
   /***********************************************************************
    - P1.0 pin is skipped by the crossbar
-   - P1.1 pin is not skipped by the crossbar
+   - P1.1 pin is skipped by the crossbar
    - P1.2 pin is skipped by the crossbar
    ***********************************************************************/
-  P1SKIP = P1SKIP_B0__SKIPPED | P1SKIP_B1__NOT_SKIPPED | P1SKIP_B2__SKIPPED;
+  P1SKIP = P1SKIP_B0__SKIPPED | P1SKIP_B1__SKIPPED | P1SKIP_B2__SKIPPED;
   // [P1SKIP - Port 1 Skip]$
 
   // $[P1MASK - Port 1 Mask]
@@ -388,10 +388,10 @@ extern void SPI_0_enter_FlashMode_from_RESET(void)
   // $[SPI0CN0 - SPI0 Control]
   /***********************************************************************
    - Enable the SPI module
-   - 3-Wire Slave or 3-Wire Master Mode
+   - 4-Wire Single-Master Mode. NSS is an output and logic low
    ***********************************************************************/
   SPI0CN0 &= ~SPI0CN0_NSSMD__FMASK;
-  SPI0CN0 |= SPI0CN0_SPIEN__ENABLED;
+  SPI0CN0 |= SPI0CN0_SPIEN__ENABLED | SPI0CN0_NSSMD__4_WIRE_MASTER_NSS_LOW;
   // [SPI0CN0 - SPI0 Control]$
 
 }
@@ -441,13 +441,13 @@ extern void PORTS_0_enter_ButtonMode_from_FlashMode(void)
    - P0.1 pin is not skipped by the crossbar
    - P0.2 pin is skipped by the crossbar
    - P0.3 pin is skipped by the crossbar
-   - P0.4 pin is skipped by the crossbar
+   - P0.4 pin is not skipped by the crossbar
    - P0.5 pin is skipped by the crossbar
    - P0.6 pin is skipped by the crossbar
    - P0.7 pin is skipped by the crossbar
    ***********************************************************************/
   P0SKIP = P0SKIP_B0__SKIPPED | P0SKIP_B1__NOT_SKIPPED | P0SKIP_B2__SKIPPED
-      | P0SKIP_B3__SKIPPED | P0SKIP_B4__SKIPPED | P0SKIP_B5__SKIPPED
+      | P0SKIP_B3__SKIPPED | P0SKIP_B4__NOT_SKIPPED | P0SKIP_B5__SKIPPED
       | P0SKIP_B6__SKIPPED | P0SKIP_B7__SKIPPED;
   // [P0SKIP - Port 0 Skip]$
 
@@ -534,13 +534,13 @@ extern void PORTS_0_enter_FlashMode_from_ButtonMode(void)
    - P0.1 pin is not skipped by the crossbar
    - P0.2 pin is not skipped by the crossbar
    - P0.3 pin is skipped by the crossbar
-   - P0.4 pin is skipped by the crossbar
+   - P0.4 pin is not skipped by the crossbar
    - P0.5 pin is skipped by the crossbar
    - P0.6 pin is skipped by the crossbar
    - P0.7 pin is skipped by the crossbar
    ***********************************************************************/
   P0SKIP = P0SKIP_B0__NOT_SKIPPED | P0SKIP_B1__NOT_SKIPPED
-      | P0SKIP_B2__NOT_SKIPPED | P0SKIP_B3__SKIPPED | P0SKIP_B4__SKIPPED
+      | P0SKIP_B2__NOT_SKIPPED | P0SKIP_B3__SKIPPED | P0SKIP_B4__NOT_SKIPPED
       | P0SKIP_B5__SKIPPED | P0SKIP_B6__SKIPPED | P0SKIP_B7__SKIPPED;
   // [P0SKIP - Port 0 Skip]$
 
@@ -606,8 +606,10 @@ extern void SPI_0_enter_FlashMode_from_ButtonMode(void)
   // $[SPI0CN0 - SPI0 Control]
   /***********************************************************************
    - Enable the SPI module
+   - 4-Wire Single-Master Mode. NSS is an output and logic low
    ***********************************************************************/
-  SPI0CN0 |= SPI0CN0_SPIEN__ENABLED;
+  SPI0CN0 &= ~SPI0CN0_NSSMD__FMASK;
+  SPI0CN0 |= SPI0CN0_SPIEN__ENABLED | SPI0CN0_NSSMD__4_WIRE_MASTER_NSS_LOW;
   // [SPI0CN0 - SPI0 Control]$
 
 }
@@ -690,6 +692,16 @@ extern void PORTS_2_enter_FlashMode_from_RESET(void)
 
   // $[P2MAT - Port 2 Match]
   // [P2MAT - Port 2 Match]$
+
+}
+
+extern void PORTS_1_enter_ButtonMode_from_FlashMode(void)
+{
+
+}
+
+extern void PORTS_1_enter_FlashMode_from_ButtonMode(void)
+{
 
 }
 
