@@ -20,34 +20,36 @@
 // [Library Includes]$
 
 //==============================================================================
-// enter_FlashMode_from_RESET
+// enter_ButtonMode_from_RESET
 //==============================================================================
-
-extern void enter_FlashMode_from_RESET(void)
+extern void enter_ButtonMode_from_RESET(void)
 {
   // $[Config Calls]
   // Save the SFRPAGE
   uint8_t SFRPAGE_save = SFRPAGE;
-  WDT_0_enter_FlashMode_from_RESET();
-  VREG_0_enter_FlashMode_from_RESET();
-  PORTS_0_enter_FlashMode_from_RESET();
-  PORTS_1_enter_FlashMode_from_RESET();
-  PORTS_2_enter_FlashMode_from_RESET();
-  PORTS_3_enter_FlashMode_from_RESET();
-  PBCFG_0_enter_FlashMode_from_RESET();
-  CIP51_0_enter_FlashMode_from_RESET();
-  CLOCK_0_enter_FlashMode_from_RESET();
-  TIMER16_2_enter_FlashMode_from_RESET();
-  SPI_0_enter_FlashMode_from_RESET();
-  INTERRUPT_0_enter_FlashMode_from_RESET();
-  USBLIB_0_enter_FlashMode_from_RESET();
+  WDT_0_enter_ButtonMode_from_RESET();
+  VREG_0_enter_ButtonMode_from_RESET();
+  PORTS_0_enter_ButtonMode_from_RESET();
+  PORTS_1_enter_ButtonMode_from_RESET();
+  PORTS_2_enter_ButtonMode_from_RESET();
+  PORTS_3_enter_ButtonMode_from_RESET();
+  PBCFG_0_enter_ButtonMode_from_RESET();
+  CIP51_0_enter_ButtonMode_from_RESET();
+  CLOCK_0_enter_ButtonMode_from_RESET();
+  TIMER16_2_enter_ButtonMode_from_RESET();
+  SPI_0_enter_ButtonMode_from_RESET();
+  INTERRUPT_0_enter_ButtonMode_from_RESET();
+  USBLIB_0_enter_ButtonMode_from_RESET();
   // Restore the SFRPAGE
   SFRPAGE = SFRPAGE_save;
   // [Config Calls]$
 
 }
 
-extern void WDT_0_enter_FlashMode_from_RESET(void)
+//================================================================================
+// WDT_0_enter_ButtonMode_from_RESET
+//================================================================================
+extern void WDT_0_enter_ButtonMode_from_RESET(void)
 {
   // $[WDTCN - Watchdog Timer Control]
   SFRPAGE = 0x00;
@@ -58,7 +60,10 @@ extern void WDT_0_enter_FlashMode_from_RESET(void)
 
 }
 
-extern void VREG_0_enter_FlashMode_from_RESET(void)
+//================================================================================
+// VREG_0_enter_ButtonMode_from_RESET
+//================================================================================
+extern void VREG_0_enter_ButtonMode_from_RESET(void)
 {
   // $[REG0CN - Voltage Regulator 0 Control]
   // [REG0CN - Voltage Regulator 0 Control]$
@@ -76,25 +81,40 @@ extern void VREG_0_enter_FlashMode_from_RESET(void)
 
 }
 
-extern void PORTS_0_enter_FlashMode_from_RESET(void)
+//================================================================================
+// PORTS_0_enter_ButtonMode_from_RESET
+//================================================================================
+extern void PORTS_0_enter_ButtonMode_from_RESET(void)
 {
   // $[P0 - Port 0 Pin Latch]
+  /***********************************************************************
+   - P0.0 is high. Set P0.0 to drive or float high
+   - P0.1 is high. Set P0.1 to drive or float high
+   - P0.2 is high. Set P0.2 to drive or float high
+   - P0.3 is low. Set P0.3 to drive low
+   - P0.4 is high. Set P0.4 to drive or float high
+   - P0.5 is high. Set P0.5 to drive or float high
+   - P0.6 is high. Set P0.6 to drive or float high
+   - P0.7 is high. Set P0.7 to drive or float high
+   ***********************************************************************/
+  SFRPAGE = 0x00;
+  P0 = P0_B0__HIGH | P0_B1__HIGH | P0_B2__HIGH | P0_B3__LOW | P0_B4__HIGH
+      | P0_B5__HIGH | P0_B6__HIGH | P0_B7__HIGH;
   // [P0 - Port 0 Pin Latch]$
 
   // $[P0MDOUT - Port 0 Output Mode]
   /***********************************************************************
-   - P0.0 output is push-pull
-   - P0.1 output is open-drain
-   - P0.2 output is push-pull
+   - P0.0 output is open-drain
+   - P0.1 output is push-pull
+   - P0.2 output is open-drain
    - P0.3 output is push-pull
    - P0.4 output is push-pull
    - P0.5 output is open-drain
    - P0.6 output is open-drain
    - P0.7 output is open-drain
    ***********************************************************************/
-  SFRPAGE = 0x00;
-  P0MDOUT = P0MDOUT_B0__PUSH_PULL | P0MDOUT_B1__OPEN_DRAIN
-      | P0MDOUT_B2__PUSH_PULL | P0MDOUT_B3__PUSH_PULL | P0MDOUT_B4__PUSH_PULL
+  P0MDOUT = P0MDOUT_B0__OPEN_DRAIN | P0MDOUT_B1__PUSH_PULL
+      | P0MDOUT_B2__OPEN_DRAIN | P0MDOUT_B3__PUSH_PULL | P0MDOUT_B4__PUSH_PULL
       | P0MDOUT_B5__OPEN_DRAIN | P0MDOUT_B6__OPEN_DRAIN
       | P0MDOUT_B7__OPEN_DRAIN;
   // [P0MDOUT - Port 0 Output Mode]$
@@ -104,18 +124,18 @@ extern void PORTS_0_enter_FlashMode_from_RESET(void)
 
   // $[P0SKIP - Port 0 Skip]
   /***********************************************************************
-   - P0.0 pin is not skipped by the crossbar
+   - P0.0 pin is skipped by the crossbar
    - P0.1 pin is not skipped by the crossbar
-   - P0.2 pin is not skipped by the crossbar
+   - P0.2 pin is skipped by the crossbar
    - P0.3 pin is skipped by the crossbar
    - P0.4 pin is not skipped by the crossbar
    - P0.5 pin is skipped by the crossbar
    - P0.6 pin is skipped by the crossbar
    - P0.7 pin is skipped by the crossbar
    ***********************************************************************/
-  P0SKIP = P0SKIP_B0__NOT_SKIPPED | P0SKIP_B1__NOT_SKIPPED
-      | P0SKIP_B2__NOT_SKIPPED | P0SKIP_B3__SKIPPED | P0SKIP_B4__NOT_SKIPPED
-      | P0SKIP_B5__SKIPPED | P0SKIP_B6__SKIPPED | P0SKIP_B7__SKIPPED;
+  P0SKIP = P0SKIP_B0__SKIPPED | P0SKIP_B1__NOT_SKIPPED | P0SKIP_B2__SKIPPED
+      | P0SKIP_B3__SKIPPED | P0SKIP_B4__NOT_SKIPPED | P0SKIP_B5__SKIPPED
+      | P0SKIP_B6__SKIPPED | P0SKIP_B7__SKIPPED;
   // [P0SKIP - Port 0 Skip]$
 
   // $[P0MASK - Port 0 Mask]
@@ -126,7 +146,10 @@ extern void PORTS_0_enter_FlashMode_from_RESET(void)
 
 }
 
-extern void PORTS_1_enter_FlashMode_from_RESET(void)
+//================================================================================
+// PORTS_1_enter_ButtonMode_from_RESET
+//================================================================================
+extern void PORTS_1_enter_ButtonMode_from_RESET(void)
 {
   // $[P1 - Port 1 Pin Latch]
   // [P1 - Port 1 Pin Latch]$
@@ -161,7 +184,40 @@ extern void PORTS_1_enter_FlashMode_from_RESET(void)
 
 }
 
-extern void PORTS_3_enter_FlashMode_from_RESET(void)
+//================================================================================
+// PORTS_2_enter_ButtonMode_from_RESET
+//================================================================================
+extern void PORTS_2_enter_ButtonMode_from_RESET(void)
+{
+  // $[P2 - Port 2 Pin Latch]
+  // [P2 - Port 2 Pin Latch]$
+
+  // $[P2MDOUT - Port 2 Output Mode]
+  // [P2MDOUT - Port 2 Output Mode]$
+
+  // $[P2MDIN - Port 2 Input Mode]
+  // [P2MDIN - Port 2 Input Mode]$
+
+  // $[P2SKIP - Port 2 Skip]
+  /***********************************************************************
+   - P2.0 pin is skipped by the crossbar
+   ***********************************************************************/
+  SFRPAGE = 0x20;
+  P2SKIP = P2SKIP_B0__SKIPPED;
+  // [P2SKIP - Port 2 Skip]$
+
+  // $[P2MASK - Port 2 Mask]
+  // [P2MASK - Port 2 Mask]$
+
+  // $[P2MAT - Port 2 Match]
+  // [P2MAT - Port 2 Match]$
+
+}
+
+//================================================================================
+// PORTS_3_enter_ButtonMode_from_RESET
+//================================================================================
+extern void PORTS_3_enter_ButtonMode_from_RESET(void)
 {
   // $[P3 - Port 3 Pin Latch]
   // [P3 - Port 3 Pin Latch]$
@@ -178,7 +234,10 @@ extern void PORTS_3_enter_FlashMode_from_RESET(void)
 
 }
 
-extern void PBCFG_0_enter_FlashMode_from_RESET(void)
+//================================================================================
+// PBCFG_0_enter_ButtonMode_from_RESET
+//================================================================================
+extern void PBCFG_0_enter_ButtonMode_from_RESET(void)
 {
   // $[XBR2 - Port I/O Crossbar 2]
   /***********************************************************************
@@ -198,19 +257,6 @@ extern void PBCFG_0_enter_FlashMode_from_RESET(void)
   // [PRTDRV - Port Drive Strength]$
 
   // $[XBR0 - Port I/O Crossbar 0]
-  /***********************************************************************
-   - UART0 I/O unavailable at Port pin
-   - SPI I/O routed to Port pins
-   - SMBus 0 I/O unavailable at Port pins
-   - CP0 unavailable at Port pin
-   - Asynchronous CP0 unavailable at Port pin
-   - CP1 unavailable at Port pin
-   - Asynchronous CP1 unavailable at Port pin
-   - SYSCLK unavailable at Port pin
-   ***********************************************************************/
-  XBR0 = XBR0_URT0E__DISABLED | XBR0_SPI0E__ENABLED | XBR0_SMB0E__DISABLED
-      | XBR0_CP0E__DISABLED | XBR0_CP0AE__DISABLED | XBR0_CP1E__DISABLED
-      | XBR0_CP1AE__DISABLED | XBR0_SYSCKE__DISABLED;
   // [XBR0 - Port I/O Crossbar 0]$
 
   // $[XBR1 - Port I/O Crossbar 1]
@@ -218,7 +264,10 @@ extern void PBCFG_0_enter_FlashMode_from_RESET(void)
 
 }
 
-extern void CIP51_0_enter_FlashMode_from_RESET(void)
+//================================================================================
+// CIP51_0_enter_ButtonMode_from_RESET
+//================================================================================
+extern void CIP51_0_enter_ButtonMode_from_RESET(void)
 {
   // $[PFE0CN - Prefetch Engine Control]
   /***********************************************************************
@@ -231,7 +280,10 @@ extern void CIP51_0_enter_FlashMode_from_RESET(void)
 
 }
 
-extern void CLOCK_0_enter_FlashMode_from_RESET(void)
+//================================================================================
+// CLOCK_0_enter_ButtonMode_from_RESET
+//================================================================================
+extern void CLOCK_0_enter_ButtonMode_from_RESET(void)
 {
   // $[HFOSC1 Setup]
   // Ensure SYSCLK is > 24 MHz before switching to HFOSC1
@@ -253,7 +305,10 @@ extern void CLOCK_0_enter_FlashMode_from_RESET(void)
 
 }
 
-extern void TIMER16_2_enter_FlashMode_from_RESET(void)
+//================================================================================
+// TIMER16_2_enter_ButtonMode_from_RESET
+//================================================================================
+extern void TIMER16_2_enter_ButtonMode_from_RESET(void)
 {
   // $[Timer Initialization]
   // Save Timer Configuration
@@ -311,7 +366,10 @@ extern void TIMER16_2_enter_FlashMode_from_RESET(void)
 
 }
 
-extern void INTERRUPT_0_enter_FlashMode_from_RESET(void)
+//================================================================================
+// INTERRUPT_0_enter_ButtonMode_from_RESET
+//================================================================================
+extern void INTERRUPT_0_enter_ButtonMode_from_RESET(void)
 {
   // $[EIE1 - Extended Interrupt Enable 1]
   // [EIE1 - Extended Interrupt Enable 1]$
@@ -355,7 +413,10 @@ extern void INTERRUPT_0_enter_FlashMode_from_RESET(void)
 
 }
 
-extern void USBLIB_0_enter_FlashMode_from_RESET(void)
+//================================================================================
+// USBLIB_0_enter_ButtonMode_from_RESET
+//================================================================================
+extern void USBLIB_0_enter_ButtonMode_from_RESET(void)
 {
   // $[USBD Init]
   USBD_Init (&initstruct);
@@ -363,39 +424,9 @@ extern void USBLIB_0_enter_FlashMode_from_RESET(void)
 
 }
 
-extern void SPI_0_enter_FlashMode_from_RESET(void)
-{
-  // $[SPI0CKR - SPI0 Clock Rate]
-  /***********************************************************************
-   - SPI0 Clock Rate = 0x01
-   ***********************************************************************/
-  SPI0CKR = (0x01 << SPI0CKR_SPI0CKR__SHIFT);
-  // [SPI0CKR - SPI0 Clock Rate]$
-
-  // $[SPI0FCN0 - SPI0 FIFO Control 0]
-  // [SPI0FCN0 - SPI0 FIFO Control 0]$
-
-  // $[SPI0FCN1 - SPI0 FIFO Control 1]
-  // [SPI0FCN1 - SPI0 FIFO Control 1]$
-
-  // $[SPI0CFG - SPI0 Configuration]
-  /***********************************************************************
-   - Enable master mode. Operate as a master
-   ***********************************************************************/
-  SPI0CFG |= SPI0CFG_MSTEN__MASTER_ENABLED;
-  // [SPI0CFG - SPI0 Configuration]$
-
-  // $[SPI0CN0 - SPI0 Control]
-  /***********************************************************************
-   - Enable the SPI module
-   - 4-Wire Single-Master Mode. NSS is an output and logic low
-   ***********************************************************************/
-  SPI0CN0 &= ~SPI0CN0_NSSMD__FMASK;
-  SPI0CN0 |= SPI0CN0_SPIEN__ENABLED | SPI0CN0_NSSMD__4_WIRE_MASTER_NSS_LOW;
-  // [SPI0CN0 - SPI0 Control]$
-
-}
-
+//==============================================================================
+// enter_ButtonMode_from_FlashMode
+//==============================================================================
 extern void enter_ButtonMode_from_FlashMode(void)
 {
   // $[Config Calls]
@@ -403,12 +434,16 @@ extern void enter_ButtonMode_from_FlashMode(void)
   uint8_t SFRPAGE_save = SFRPAGE;
   PORTS_0_enter_ButtonMode_from_FlashMode();
   PBCFG_0_enter_ButtonMode_from_FlashMode();
+  SPI_0_enter_ButtonMode_from_FlashMode();
   // Restore the SFRPAGE
   SFRPAGE = SFRPAGE_save;
   // [Config Calls]$
 
 }
 
+//================================================================================
+// PORTS_0_enter_ButtonMode_from_FlashMode
+//================================================================================
 extern void PORTS_0_enter_ButtonMode_from_FlashMode(void)
 {
   // $[P0 - Port 0 Pin Latch]
@@ -459,6 +494,9 @@ extern void PORTS_0_enter_ButtonMode_from_FlashMode(void)
 
 }
 
+//================================================================================
+// PBCFG_0_enter_ButtonMode_from_FlashMode
+//================================================================================
 extern void PBCFG_0_enter_ButtonMode_from_FlashMode(void)
 {
   // $[XBR2 - Port I/O Crossbar 2]
@@ -488,6 +526,9 @@ extern void PBCFG_0_enter_ButtonMode_from_FlashMode(void)
 
 }
 
+//==============================================================================
+// enter_FlashMode_from_ButtonMode
+//==============================================================================
 extern void enter_FlashMode_from_ButtonMode(void)
 {
   // $[Config Calls]
@@ -502,6 +543,9 @@ extern void enter_FlashMode_from_ButtonMode(void)
 
 }
 
+//================================================================================
+// PORTS_0_enter_FlashMode_from_ButtonMode
+//================================================================================
 extern void PORTS_0_enter_FlashMode_from_ButtonMode(void)
 {
   // $[P0 - Port 0 Pin Latch]
@@ -552,6 +596,9 @@ extern void PORTS_0_enter_FlashMode_from_ButtonMode(void)
 
 }
 
+//================================================================================
+// PBCFG_0_enter_FlashMode_from_ButtonMode
+//================================================================================
 extern void PBCFG_0_enter_FlashMode_from_ButtonMode(void)
 {
   // $[XBR2 - Port I/O Crossbar 2]
@@ -581,7 +628,33 @@ extern void PBCFG_0_enter_FlashMode_from_ButtonMode(void)
 
 }
 
+//================================================================================
+// SPI_0_enter_FlashMode_from_ButtonMode
+//================================================================================
 extern void SPI_0_enter_FlashMode_from_ButtonMode(void)
+{
+  // $[SPI0CKR - SPI0 Clock Rate]
+  // [SPI0CKR - SPI0 Clock Rate]$
+
+  // $[SPI0FCN0 - SPI0 FIFO Control 0]
+  // [SPI0FCN0 - SPI0 FIFO Control 0]$
+
+  // $[SPI0FCN1 - SPI0 FIFO Control 1]
+  // [SPI0FCN1 - SPI0 FIFO Control 1]$
+
+  // $[SPI0CFG - SPI0 Configuration]
+  // [SPI0CFG - SPI0 Configuration]$
+
+  // $[SPI0CN0 - SPI0 Control]
+  /***********************************************************************
+   - Enable the SPI module
+   ***********************************************************************/
+  SPI0CN0 |= SPI0CN0_SPIEN__ENABLED;
+  // [SPI0CN0 - SPI0 Control]$
+
+}
+
+extern void SPI_0_enter_ButtonMode_from_RESET(void)
 {
   // $[SPI0CKR - SPI0 Clock Rate]
   /***********************************************************************
@@ -605,103 +678,34 @@ extern void SPI_0_enter_FlashMode_from_ButtonMode(void)
 
   // $[SPI0CN0 - SPI0 Control]
   /***********************************************************************
-   - Enable the SPI module
    - 4-Wire Single-Master Mode. NSS is an output and logic low
    ***********************************************************************/
   SPI0CN0 &= ~SPI0CN0_NSSMD__FMASK;
-  SPI0CN0 |= SPI0CN0_SPIEN__ENABLED | SPI0CN0_NSSMD__4_WIRE_MASTER_NSS_LOW;
+  SPI0CN0 |= SPI0CN0_NSSMD__4_WIRE_MASTER_NSS_LOW;
   // [SPI0CN0 - SPI0 Control]$
 
 }
 
-extern void PORTS_2_enter_ButtonMode_from_FlashMode(void)
+extern void SPI_0_enter_ButtonMode_from_FlashMode(void)
 {
-  // $[P2 - Port 2 Pin Latch]
-  // [P2 - Port 2 Pin Latch]$
+  // $[SPI0CKR - SPI0 Clock Rate]
+  // [SPI0CKR - SPI0 Clock Rate]$
 
-  // $[P2MDOUT - Port 2 Output Mode]
-  // [P2MDOUT - Port 2 Output Mode]$
+  // $[SPI0FCN0 - SPI0 FIFO Control 0]
+  // [SPI0FCN0 - SPI0 FIFO Control 0]$
 
-  // $[P2MDIN - Port 2 Input Mode]
-  // [P2MDIN - Port 2 Input Mode]$
+  // $[SPI0FCN1 - SPI0 FIFO Control 1]
+  // [SPI0FCN1 - SPI0 FIFO Control 1]$
 
-  // $[P2SKIP - Port 2 Skip]
+  // $[SPI0CFG - SPI0 Configuration]
+  // [SPI0CFG - SPI0 Configuration]$
+
+  // $[SPI0CN0 - SPI0 Control]
   /***********************************************************************
-   - P2.0 pin is skipped by the crossbar
+   - Disable the SPI module
    ***********************************************************************/
-  SFRPAGE = 0x20;
-  P2SKIP = P2SKIP_B0__SKIPPED;
-  // [P2SKIP - Port 2 Skip]$
-
-  // $[P2MASK - Port 2 Mask]
-  // [P2MASK - Port 2 Mask]$
-
-  // $[P2MAT - Port 2 Match]
-  // [P2MAT - Port 2 Match]$
-
-}
-
-extern void PORTS_2_enter_FlashMode_from_ButtonMode(void)
-{
-  // $[P2 - Port 2 Pin Latch]
-  // [P2 - Port 2 Pin Latch]$
-
-  // $[P2MDOUT - Port 2 Output Mode]
-  // [P2MDOUT - Port 2 Output Mode]$
-
-  // $[P2MDIN - Port 2 Input Mode]
-  // [P2MDIN - Port 2 Input Mode]$
-
-  // $[P2SKIP - Port 2 Skip]
-  /***********************************************************************
-   - P2.0 pin is not skipped by the crossbar
-   ***********************************************************************/
-  SFRPAGE = 0x20;
-  P2SKIP = P2SKIP_B0__NOT_SKIPPED;
-  // [P2SKIP - Port 2 Skip]$
-
-  // $[P2MASK - Port 2 Mask]
-  // [P2MASK - Port 2 Mask]$
-
-  // $[P2MAT - Port 2 Match]
-  // [P2MAT - Port 2 Match]$
-
-}
-
-extern void PORTS_2_enter_FlashMode_from_RESET(void)
-{
-  // $[P2 - Port 2 Pin Latch]
-  // [P2 - Port 2 Pin Latch]$
-
-  // $[P2MDOUT - Port 2 Output Mode]
-  // [P2MDOUT - Port 2 Output Mode]$
-
-  // $[P2MDIN - Port 2 Input Mode]
-  // [P2MDIN - Port 2 Input Mode]$
-
-  // $[P2SKIP - Port 2 Skip]
-  /***********************************************************************
-   - P2.0 pin is skipped by the crossbar
-   ***********************************************************************/
-  SFRPAGE = 0x20;
-  P2SKIP = P2SKIP_B0__SKIPPED;
-  // [P2SKIP - Port 2 Skip]$
-
-  // $[P2MASK - Port 2 Mask]
-  // [P2MASK - Port 2 Mask]$
-
-  // $[P2MAT - Port 2 Match]
-  // [P2MAT - Port 2 Match]$
-
-}
-
-extern void PORTS_1_enter_ButtonMode_from_FlashMode(void)
-{
-
-}
-
-extern void PORTS_1_enter_FlashMode_from_ButtonMode(void)
-{
+  SPI0CN0 &= ~SPI0CN0_SPIEN__BMASK;
+  // [SPI0CN0 - SPI0 Control]$
 
 }
 

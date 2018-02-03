@@ -24,6 +24,10 @@
 #define S2 P0_B7
 #define S3 P0_B6
 #define S4 P0_B5
+#define D_LED P0_B3
+#define L0 P1_B1
+#define L1 P1_B2
+#define L2 P3_B1
 
 // Switch pressed
 #define PRESSED(x) (!x)
@@ -77,5 +81,8 @@ extern uint8_t workflowNumActions;
 
 extern Action_TypeDef SI_SEG_XDATA tmpWorkflow[WORKFLOW_MAX_SIZE];
 extern volatile int8_t workflowUpdated;
+
+
+extern uint32_t prevTransitionTime;
 
 #endif /* INC_ASTROKEY_H_ */

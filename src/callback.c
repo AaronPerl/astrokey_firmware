@@ -219,6 +219,18 @@ USB_Status_TypeDef USBD_SetupCmdCb(SI_VARIABLE_SEGMENT_POINTER(
             retVal = USB_STATUS_OK;
 
             break;
+          case 0xF1:
+
+            tmp32 = prevTransitionTime;
+
+            USBD_Write(EP0,
+                       (SI_VARIABLE_SEGMENT_POINTER(, uint8_t, SI_SEG_GENERIC))&tmp32,
+                       EFM8_MIN(sizeof(tmp32), setup->wLength),
+                       false);
+
+            retVal = USB_STATUS_OK;
+
+            break;
         }
         break;
       default:

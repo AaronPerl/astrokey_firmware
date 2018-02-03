@@ -51,6 +51,8 @@
 #include "InitDevice.h"
 #include "astrokey.h"
 #include "delay.h"
+#include "leds.h"
+#include "fast_hsv2rgb.h"
 #include "EFM8UB1_FlashPrimitives.h"
 #include "EFM8UB1_FlashUtils.h"
 
@@ -290,17 +292,40 @@ uint8_t checkKeyReleased(uint8_t bitMask, uint8_t pressed)
 // for details.
 //
 // ----------------------------------------------------------------------------
+
+uint32_t prevTransitionTime;
+
 int16_t main(void)
 {
-  enter_FlashMode_from_RESET();
+  uint16_t h = 0;
+  uint8_t i;
+  uint8_t r;
+  uint8_t g;
+  uint8_t b;
+  enter_ButtonMode_from_RESET();
+
   /*if (PRESSED(S0))
   {
     *((uint8_t SI_SEG_DATA *) 0x00) = 0xA5;
     RSTSRC = RSTSRC_SWRSF__SET | RSTSRC_PORSF__SET;
   }*/
 
+  prevTransitionTime = getMillis();
+
   while (1)
   {
+    if ((uint32_t)(getMillis() - prevTransitionTime) >= 10UL)
+    {
+      prevTransitionTime = getMillis();
+      for (i = 0; i < 5; i++)
+      {
+        fast_hsv2rgb_8bit((h + i * (HSV_HUE_MAX / 25)) % HSV_HUE_MAX, HSV_SAT_MAX, HSV_VAL_MAX, &r, &g, &b);
+        setRGBLED(i, r,g,b);
+      }
+      h += HSV_HUE_MAX / 250;
+      h %= HSV_HUE_MAX;
+      refreshRGBLEDs();
+    }
     if (PRESSED(S0) && PRESSED(S4))
     {
       *((uint8_t SI_SEG_DATA *) 0x00) = 0xA5;

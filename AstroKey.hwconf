@@ -9,7 +9,7 @@
     <property object="CLOCK_0" propertyId="clock.clockselect.clocksourcedivider" value="SYSCLK / 1"/>
     <property object="CLOCK_0" propertyId="clock.clockselect.selectclocksource" value="Internal High Frequency Oscillator 1"/>
     <property object="CROSSBAR0" propertyId="xbar0.spi0.clockdata" value="Enabled"/>
-    <property object="FlashMode" propertyId="mode.diagramLocation" value="100, 100"/>
+    <property object="FlashMode" propertyId="mode.diagramLocation" value="213, 73"/>
     <property object="INTERRUPT_0" propertyId="ABPeripheral.included" value="true"/>
     <property object="INTERRUPT_0" propertyId="interrupt.interruptenable.enableallinterrupts" value="Enabled"/>
     <property object="INTERRUPT_0" propertyId="interrupt.interruptenable.enabletimer2interrupt" value="Enabled"/>
@@ -20,6 +20,7 @@
     <property object="P0.2" propertyId="ports.settings.outputmode" value="Push-pull"/>
     <property object="P0.3" propertyId="ports.settings.iomode" value="Digital Push-Pull Output"/>
     <property object="P0.3" propertyId="ports.settings.label" value="D_LED"/>
+    <property object="P0.3" propertyId="ports.settings.latch" value="Low"/>
     <property object="P0.3" propertyId="ports.settings.outputmode" value="Push-pull"/>
     <property object="P0.3" propertyId="ports.settings.skip" value="Skipped"/>
     <property object="P0.4" propertyId="ports.settings.iomode" value="Digital Push-Pull Output"/>
@@ -114,7 +115,7 @@
   </mode>
   <mode name="ButtonMode">
     <property object="ADC_0" propertyId="adc.configuration.sarclockdivider" value="6"/>
-    <property object="ButtonMode" propertyId="mode.diagramLocation" value="323, 99"/>
+    <property object="ButtonMode" propertyId="mode.diagramLocation" value="66, 195"/>
     <property object="CIP51_0" propertyId="ABPeripheral.included" value="true"/>
     <property object="CIP51_0" propertyId="cip51.prefetchenginecontrol.enableprefetch" value="Enabled"/>
     <property object="CIP51_0" propertyId="cip51.prefetchenginecontrol.flashreadtiming" value="SYSCLK is below 50 MHz"/>
@@ -133,6 +134,7 @@
     <property object="P0.2" propertyId="ports.settings.skip" value="Skipped"/>
     <property object="P0.3" propertyId="ports.settings.iomode" value="Digital Push-Pull Output"/>
     <property object="P0.3" propertyId="ports.settings.label" value="D_LED"/>
+    <property object="P0.3" propertyId="ports.settings.latch" value="Low"/>
     <property object="P0.3" propertyId="ports.settings.outputmode" value="Push-pull"/>
     <property object="P0.3" propertyId="ports.settings.skip" value="Skipped"/>
     <property object="P0.4" propertyId="ports.settings.iomode" value="Digital Push-Pull Output"/>
@@ -161,9 +163,15 @@
     <property object="PBCFG_0" propertyId="pbcfg.settings.enablecrossbar" value="Enabled"/>
     <property object="PCA_0" propertyId="pca.pcacountertimerconfiguration.pcaclockfrequency" value="2.042 MHz"/>
     <property object="PCA_0" propertyId="pca.pcacountertimerconfiguration.pcaclockperiod" value="489.796 nS"/>
-    <property object="SPI_0" propertyId="spi.clockrate.sysclk" value="24.500 MHz"/>
-    <property object="SPI_0" propertyId="spi.clockrate.sysclkdividercoefficientspi0ckr" value="7"/>
-    <property object="SPI_0" propertyId="spi.control.slaveselectmode" value="Slave or master 3-wire mode"/>
+    <property object="SPI_0" propertyId="ABPeripheral.included" value="true"/>
+    <property object="SPI_0" propertyId="spi.clockrate.spiclockfrequencyactual" value="12.000 MHz"/>
+    <property object="SPI_0" propertyId="spi.clockrate.spiclockfrequencytarget" value="12000000"/>
+    <property object="SPI_0" propertyId="spi.clockrate.sysclk" value="48.000 MHz"/>
+    <property object="SPI_0" propertyId="spi.clockrate.sysclkdividercoefficientspi0ckr" value="1"/>
+    <property object="SPI_0" propertyId="spi.configuration.enablemastermode" value="Enable"/>
+    <property object="SPI_0" propertyId="spi.configuration.spimode" value="Master"/>
+    <property object="SPI_0" propertyId="spi.control.busmodemaster" value="Single-master 4-wire mode, NSS low"/>
+    <property object="SPI_0" propertyId="spi.control.slaveselectmode" value="Single-master 4-wire mode, NSS low"/>
     <property object="TIMER01_0" propertyId="ABPeripheral.included" value="true"/>
     <property object="TIMER16_2" propertyId="ABPeripheral.included" value="true"/>
     <property object="TIMER16_2" propertyId="timer16.control.runcontrol" value="Start"/>
@@ -219,8 +227,8 @@
     <property object="WDT_0" propertyId="wdt.watchdogcontrol.wdtenable" value="Disable"/>
   </mode>
   <modeTransition>
-    <property object="RESET &#x2192; FlashMode" propertyId="modeTransition.source" value="RESET"/>
-    <property object="RESET &#x2192; FlashMode" propertyId="modeTransition.target" value="FlashMode"/>
+    <property object="RESET &#x2192; ButtonMode" propertyId="modeTransition.source" value="RESET"/>
+    <property object="RESET &#x2192; ButtonMode" propertyId="modeTransition.target" value="ButtonMode"/>
   </modeTransition>
   <modeTransition>
     <property object="FlashMode &#x2192; ButtonMode" propertyId="modeTransition.source" value="FlashMode"/>
