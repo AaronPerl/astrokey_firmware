@@ -1,9 +1,13 @@
-/*
- * astrokey.h
- *
- *  Created on: Nov 3, 2017
- *      Author: Aaron
- */
+//-----------------------------------------------------------------------------
+// astrokey.h
+//-----------------------------------------------------------------------------
+// Copyright 2018 AstroKey
+// https://github.com/AstroKey/astrokey_firmware/blob/master/LICENSE
+//
+// File Description:
+//
+// AstroKey-specific definitions and function declarations.
+//
 
 #ifndef INC_ASTROKEY_H_
 #define INC_ASTROKEY_H_
@@ -83,7 +87,8 @@ extern uint8_t workflowNumActions;
 extern Action_TypeDef SI_SEG_XDATA tmpWorkflow[WORKFLOW_MAX_SIZE];
 extern volatile int8_t workflowUpdated;
 
-
 extern uint32_t prevTransitionTime;
+void astrokeyInit();
+void astrokeyPoll();
 
 #endif /* INC_ASTROKEY_H_ */
