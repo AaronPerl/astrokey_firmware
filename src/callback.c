@@ -11,11 +11,13 @@
 
 #include "SI_EFM8UB1_Register_Enums.h"
 #include "efm8_usb.h"
+#include "InitDevice.h"
 #include "descriptors.h"
 #include "idle.h"
 #include "webusb.h"
 #include "astrokey.h"
 #include "delay.h"
+#include "flash.h"
 
 // ----------------------------------------------------------------------------
 // Constants
@@ -24,10 +26,16 @@
 // ----------------------------------------------------------------------------
 // Variables
 // ----------------------------------------------------------------------------
-uint8_t tmpBuffer;
-volatile int8_t workflowTransfer = -1;
+static uint8_t tmpBuffer;
+static volatile int8_t workflowTransfer = -1;
 
-uint32_t tmp32;
+#define FLASH_BUFFER_LEN 512
+SI_SEGMENT_VARIABLE(flashBuffer[FLASH_BUFFER_LEN], uint8_t, SI_SEG_XDATA);
+
+static uint32_t tmp32;
+
+volatile uint16_t writeFlash = 0;
+volatile uint32_t writeFlashAddr = 0;
 
 // ----------------------------------------------------------------------------
 // Functions
@@ -236,6 +244,19 @@ USB_Status_TypeDef USBD_SetupCmdCb(SI_VARIABLE_SEGMENT_POINTER(
             retVal = USB_STATUS_OK;
 
             break;
+          case 0xF2:
+
+            memset(flashBuffer, 0xAA, FLASH_BUFFER_LEN);
+
+            readFlashBytes(setup->wValue, flashBuffer, EFM8_MIN(FLASH_BUFFER_LEN, setup->wLength));
+
+            USBD_Write(EP0,
+                       (SI_VARIABLE_SEGMENT_POINTER(, uint8_t, SI_SEG_GENERIC))flashBuffer,
+                       EFM8_MIN(FLASH_BUFFER_LEN, setup->wLength),
+                       false);
+
+            retVal = USB_STATUS_OK;
+            break;
         }
         break;
       default:
@@ -259,6 +280,24 @@ USB_Status_TypeDef USBD_SetupCmdCb(SI_VARIABLE_SEGMENT_POINTER(
                     true);
 
           workflowTransfer = setup->wValue;
+
+          retVal = USB_STATUS_OK;
+          break;
+        case 0xE0:
+          eraseFlashBlock(setup->wValue);
+
+          retVal = USB_STATUS_OK;
+          break;
+        case 0xE2:
+          memset((void*) flashBuffer, 0, FLASH_BUFFER_LEN);
+
+          USBD_Read(EP0,
+                    (SI_VARIABLE_SEGMENT_POINTER(, uint8_t, SI_SEG_GENERIC))flashBuffer,
+                    EFM8_MIN(FLASH_BUFFER_LEN, setup->wLength),
+                    true);
+
+          writeFlash = EFM8_MIN(FLASH_BUFFER_LEN, setup->wLength);
+          writeFlashAddr = setup->wValue;
 
           retVal = USB_STATUS_OK;
           break;
@@ -409,14 +448,18 @@ uint16_t USBD_XferCompleteCb(uint8_t epAddr,
 {
   UNREFERENCED_ARGUMENT(epAddr);
   UNREFERENCED_ARGUMENT(xferred);
-  UNREFERENCED_ARGUMENT(remaining);
 
-  if (status == USB_STATUS_OK)
+  if (status == USB_STATUS_OK && remaining == 0)
   {
     if (workflowTransfer != -1)
     {
       workflowUpdated = workflowTransfer;
       workflowTransfer = -1;
+    }
+    if (writeFlash)
+    {
+      writeFlashBytes(writeFlashAddr, flashBuffer, writeFlash);
+      writeFlash = 0;
     }
   }
 

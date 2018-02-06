@@ -48,8 +48,9 @@ int16_t main(void)
       prevTransitionTime = getMillis();
       for (i = 0; i < 5; i++)
       {
-        fast_hsv2rgb_8bit((h + i * (HSV_HUE_MAX / 25)) % HSV_HUE_MAX, HSV_SAT_MAX, HSV_VAL_MAX, &r, &g, &b);
+        fast_hsv2rgb_8bit((h + i * (HSV_HUE_MAX / 25)) % HSV_HUE_MAX, HSV_SAT_MAX, HSV_VAL_MAX / 10, &r, &g, &b);
         setRGBLED(i, r,g,b);
+        //setRGBLED(i, 0x0F, 0x0F, 0x0F);
       }
       h += HSV_HUE_MAX / 250;
       h %= HSV_HUE_MAX;

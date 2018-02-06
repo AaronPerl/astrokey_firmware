@@ -124,18 +124,18 @@ extern void PORTS_0_enter_ButtonMode_from_RESET(void)
 
   // $[P0SKIP - Port 0 Skip]
   /***********************************************************************
-   - P0.0 pin is skipped by the crossbar
+   - P0.0 pin is not skipped by the crossbar
    - P0.1 pin is not skipped by the crossbar
-   - P0.2 pin is skipped by the crossbar
+   - P0.2 pin is not skipped by the crossbar
    - P0.3 pin is skipped by the crossbar
-   - P0.4 pin is not skipped by the crossbar
+   - P0.4 pin is skipped by the crossbar
    - P0.5 pin is skipped by the crossbar
    - P0.6 pin is skipped by the crossbar
    - P0.7 pin is skipped by the crossbar
    ***********************************************************************/
-  P0SKIP = P0SKIP_B0__SKIPPED | P0SKIP_B1__NOT_SKIPPED | P0SKIP_B2__SKIPPED
-      | P0SKIP_B3__SKIPPED | P0SKIP_B4__NOT_SKIPPED | P0SKIP_B5__SKIPPED
-      | P0SKIP_B6__SKIPPED | P0SKIP_B7__SKIPPED;
+  P0SKIP = P0SKIP_B0__NOT_SKIPPED | P0SKIP_B1__NOT_SKIPPED
+      | P0SKIP_B2__NOT_SKIPPED | P0SKIP_B3__SKIPPED | P0SKIP_B4__SKIPPED
+      | P0SKIP_B5__SKIPPED | P0SKIP_B6__SKIPPED | P0SKIP_B7__SKIPPED;
   // [P0SKIP - Port 0 Skip]$
 
   // $[P0MASK - Port 0 Mask]
@@ -367,6 +367,40 @@ extern void TIMER16_2_enter_ButtonMode_from_RESET(void)
 }
 
 //================================================================================
+// SPI_0_enter_ButtonMode_from_RESET
+//================================================================================
+extern void SPI_0_enter_ButtonMode_from_RESET(void)
+{
+  // $[SPI0CKR - SPI0 Clock Rate]
+  /***********************************************************************
+   - SPI0 Clock Rate = 0x03
+   ***********************************************************************/
+  SPI0CKR = (0x03 << SPI0CKR_SPI0CKR__SHIFT);
+  // [SPI0CKR - SPI0 Clock Rate]$
+
+  // $[SPI0FCN0 - SPI0 FIFO Control 0]
+  // [SPI0FCN0 - SPI0 FIFO Control 0]$
+
+  // $[SPI0FCN1 - SPI0 FIFO Control 1]
+  // [SPI0FCN1 - SPI0 FIFO Control 1]$
+
+  // $[SPI0CFG - SPI0 Configuration]
+  /***********************************************************************
+   - Enable master mode. Operate as a master
+   ***********************************************************************/
+  SPI0CFG |= SPI0CFG_MSTEN__MASTER_ENABLED;
+  // [SPI0CFG - SPI0 Configuration]$
+
+  // $[SPI0CN0 - SPI0 Control]
+  /***********************************************************************
+   - 3-Wire Slave or 3-Wire Master Mode
+   ***********************************************************************/
+  SPI0CN0 &= ~SPI0CN0_NSSMD__FMASK;
+  // [SPI0CN0 - SPI0 Control]$
+
+}
+
+//================================================================================
 // INTERRUPT_0_enter_ButtonMode_from_RESET
 //================================================================================
 extern void INTERRUPT_0_enter_ButtonMode_from_RESET(void)
@@ -425,108 +459,6 @@ extern void USBLIB_0_enter_ButtonMode_from_RESET(void)
 }
 
 //==============================================================================
-// enter_ButtonMode_from_FlashMode
-//==============================================================================
-extern void enter_ButtonMode_from_FlashMode(void)
-{
-  // $[Config Calls]
-  // Save the SFRPAGE
-  uint8_t SFRPAGE_save = SFRPAGE;
-  PORTS_0_enter_ButtonMode_from_FlashMode();
-  PBCFG_0_enter_ButtonMode_from_FlashMode();
-  SPI_0_enter_ButtonMode_from_FlashMode();
-  // Restore the SFRPAGE
-  SFRPAGE = SFRPAGE_save;
-  // [Config Calls]$
-
-}
-
-//================================================================================
-// PORTS_0_enter_ButtonMode_from_FlashMode
-//================================================================================
-extern void PORTS_0_enter_ButtonMode_from_FlashMode(void)
-{
-  // $[P0 - Port 0 Pin Latch]
-  // [P0 - Port 0 Pin Latch]$
-
-  // $[P0MDOUT - Port 0 Output Mode]
-  /***********************************************************************
-   - P0.0 output is open-drain
-   - P0.1 output is push-pull
-   - P0.2 output is open-drain
-   - P0.3 output is push-pull
-   - P0.4 output is push-pull
-   - P0.5 output is open-drain
-   - P0.6 output is open-drain
-   - P0.7 output is open-drain
-   ***********************************************************************/
-  SFRPAGE = 0x00;
-  P0MDOUT = P0MDOUT_B0__OPEN_DRAIN | P0MDOUT_B1__PUSH_PULL
-      | P0MDOUT_B2__OPEN_DRAIN | P0MDOUT_B3__PUSH_PULL | P0MDOUT_B4__PUSH_PULL
-      | P0MDOUT_B5__OPEN_DRAIN | P0MDOUT_B6__OPEN_DRAIN
-      | P0MDOUT_B7__OPEN_DRAIN;
-  // [P0MDOUT - Port 0 Output Mode]$
-
-  // $[P0MDIN - Port 0 Input Mode]
-  // [P0MDIN - Port 0 Input Mode]$
-
-  // $[P0SKIP - Port 0 Skip]
-  /***********************************************************************
-   - P0.0 pin is skipped by the crossbar
-   - P0.1 pin is not skipped by the crossbar
-   - P0.2 pin is skipped by the crossbar
-   - P0.3 pin is skipped by the crossbar
-   - P0.4 pin is not skipped by the crossbar
-   - P0.5 pin is skipped by the crossbar
-   - P0.6 pin is skipped by the crossbar
-   - P0.7 pin is skipped by the crossbar
-   ***********************************************************************/
-  P0SKIP = P0SKIP_B0__SKIPPED | P0SKIP_B1__NOT_SKIPPED | P0SKIP_B2__SKIPPED
-      | P0SKIP_B3__SKIPPED | P0SKIP_B4__NOT_SKIPPED | P0SKIP_B5__SKIPPED
-      | P0SKIP_B6__SKIPPED | P0SKIP_B7__SKIPPED;
-  // [P0SKIP - Port 0 Skip]$
-
-  // $[P0MASK - Port 0 Mask]
-  // [P0MASK - Port 0 Mask]$
-
-  // $[P0MAT - Port 0 Match]
-  // [P0MAT - Port 0 Match]$
-
-}
-
-//================================================================================
-// PBCFG_0_enter_ButtonMode_from_FlashMode
-//================================================================================
-extern void PBCFG_0_enter_ButtonMode_from_FlashMode(void)
-{
-  // $[XBR2 - Port I/O Crossbar 2]
-  // [XBR2 - Port I/O Crossbar 2]$
-
-  // $[PRTDRV - Port Drive Strength]
-  // [PRTDRV - Port Drive Strength]$
-
-  // $[XBR0 - Port I/O Crossbar 0]
-  /***********************************************************************
-   - UART0 I/O unavailable at Port pin
-   - SPI I/O unavailable at Port pins
-   - SMBus 0 I/O unavailable at Port pins
-   - CP0 unavailable at Port pin
-   - Asynchronous CP0 unavailable at Port pin
-   - CP1 unavailable at Port pin
-   - Asynchronous CP1 unavailable at Port pin
-   - SYSCLK unavailable at Port pin
-   ***********************************************************************/
-  XBR0 = XBR0_URT0E__DISABLED | XBR0_SPI0E__DISABLED | XBR0_SMB0E__DISABLED
-      | XBR0_CP0E__DISABLED | XBR0_CP0AE__DISABLED | XBR0_CP1E__DISABLED
-      | XBR0_CP1AE__DISABLED | XBR0_SYSCKE__DISABLED;
-  // [XBR0 - Port I/O Crossbar 0]$
-
-  // $[XBR1 - Port I/O Crossbar 1]
-  // [XBR1 - Port I/O Crossbar 1]$
-
-}
-
-//==============================================================================
 // enter_FlashMode_from_ButtonMode
 //==============================================================================
 extern void enter_FlashMode_from_ButtonMode(void)
@@ -573,19 +505,6 @@ extern void PORTS_0_enter_FlashMode_from_ButtonMode(void)
   // [P0MDIN - Port 0 Input Mode]$
 
   // $[P0SKIP - Port 0 Skip]
-  /***********************************************************************
-   - P0.0 pin is not skipped by the crossbar
-   - P0.1 pin is not skipped by the crossbar
-   - P0.2 pin is not skipped by the crossbar
-   - P0.3 pin is skipped by the crossbar
-   - P0.4 pin is not skipped by the crossbar
-   - P0.5 pin is skipped by the crossbar
-   - P0.6 pin is skipped by the crossbar
-   - P0.7 pin is skipped by the crossbar
-   ***********************************************************************/
-  P0SKIP = P0SKIP_B0__NOT_SKIPPED | P0SKIP_B1__NOT_SKIPPED
-      | P0SKIP_B2__NOT_SKIPPED | P0SKIP_B3__SKIPPED | P0SKIP_B4__NOT_SKIPPED
-      | P0SKIP_B5__SKIPPED | P0SKIP_B6__SKIPPED | P0SKIP_B7__SKIPPED;
   // [P0SKIP - Port 0 Skip]$
 
   // $[P0MASK - Port 0 Mask]
@@ -654,38 +573,98 @@ extern void SPI_0_enter_FlashMode_from_ButtonMode(void)
 
 }
 
-extern void SPI_0_enter_ButtonMode_from_RESET(void)
+//==============================================================================
+// enter_ButtonMode_from_FlashMode
+//==============================================================================
+extern void enter_ButtonMode_from_FlashMode(void)
 {
-  // $[SPI0CKR - SPI0 Clock Rate]
-  /***********************************************************************
-   - SPI0 Clock Rate = 0x01
-   ***********************************************************************/
-  SPI0CKR = (0x01 << SPI0CKR_SPI0CKR__SHIFT);
-  // [SPI0CKR - SPI0 Clock Rate]$
-
-  // $[SPI0FCN0 - SPI0 FIFO Control 0]
-  // [SPI0FCN0 - SPI0 FIFO Control 0]$
-
-  // $[SPI0FCN1 - SPI0 FIFO Control 1]
-  // [SPI0FCN1 - SPI0 FIFO Control 1]$
-
-  // $[SPI0CFG - SPI0 Configuration]
-  /***********************************************************************
-   - Enable master mode. Operate as a master
-   ***********************************************************************/
-  SPI0CFG |= SPI0CFG_MSTEN__MASTER_ENABLED;
-  // [SPI0CFG - SPI0 Configuration]$
-
-  // $[SPI0CN0 - SPI0 Control]
-  /***********************************************************************
-   - 4-Wire Single-Master Mode. NSS is an output and logic low
-   ***********************************************************************/
-  SPI0CN0 &= ~SPI0CN0_NSSMD__FMASK;
-  SPI0CN0 |= SPI0CN0_NSSMD__4_WIRE_MASTER_NSS_LOW;
-  // [SPI0CN0 - SPI0 Control]$
+  // $[Config Calls]
+  // Save the SFRPAGE
+  uint8_t SFRPAGE_save = SFRPAGE;
+  PORTS_0_enter_ButtonMode_from_FlashMode();
+  PBCFG_0_enter_ButtonMode_from_FlashMode();
+  SPI_0_enter_ButtonMode_from_FlashMode();
+  // Restore the SFRPAGE
+  SFRPAGE = SFRPAGE_save;
+  // [Config Calls]$
 
 }
 
+//================================================================================
+// PORTS_0_enter_ButtonMode_from_FlashMode
+//================================================================================
+extern void PORTS_0_enter_ButtonMode_from_FlashMode(void)
+{
+  // $[P0 - Port 0 Pin Latch]
+  // [P0 - Port 0 Pin Latch]$
+
+  // $[P0MDOUT - Port 0 Output Mode]
+  /***********************************************************************
+   - P0.0 output is open-drain
+   - P0.1 output is push-pull
+   - P0.2 output is open-drain
+   - P0.3 output is push-pull
+   - P0.4 output is push-pull
+   - P0.5 output is open-drain
+   - P0.6 output is open-drain
+   - P0.7 output is open-drain
+   ***********************************************************************/
+  SFRPAGE = 0x00;
+  P0MDOUT = P0MDOUT_B0__OPEN_DRAIN | P0MDOUT_B1__PUSH_PULL
+      | P0MDOUT_B2__OPEN_DRAIN | P0MDOUT_B3__PUSH_PULL | P0MDOUT_B4__PUSH_PULL
+      | P0MDOUT_B5__OPEN_DRAIN | P0MDOUT_B6__OPEN_DRAIN
+      | P0MDOUT_B7__OPEN_DRAIN;
+  // [P0MDOUT - Port 0 Output Mode]$
+
+  // $[P0MDIN - Port 0 Input Mode]
+  // [P0MDIN - Port 0 Input Mode]$
+
+  // $[P0SKIP - Port 0 Skip]
+  // [P0SKIP - Port 0 Skip]$
+
+  // $[P0MASK - Port 0 Mask]
+  // [P0MASK - Port 0 Mask]$
+
+  // $[P0MAT - Port 0 Match]
+  // [P0MAT - Port 0 Match]$
+
+}
+
+//================================================================================
+// PBCFG_0_enter_ButtonMode_from_FlashMode
+//================================================================================
+extern void PBCFG_0_enter_ButtonMode_from_FlashMode(void)
+{
+  // $[XBR2 - Port I/O Crossbar 2]
+  // [XBR2 - Port I/O Crossbar 2]$
+
+  // $[PRTDRV - Port Drive Strength]
+  // [PRTDRV - Port Drive Strength]$
+
+  // $[XBR0 - Port I/O Crossbar 0]
+  /***********************************************************************
+   - UART0 I/O unavailable at Port pin
+   - SPI I/O unavailable at Port pins
+   - SMBus 0 I/O unavailable at Port pins
+   - CP0 unavailable at Port pin
+   - Asynchronous CP0 unavailable at Port pin
+   - CP1 unavailable at Port pin
+   - Asynchronous CP1 unavailable at Port pin
+   - SYSCLK unavailable at Port pin
+   ***********************************************************************/
+  XBR0 = XBR0_URT0E__DISABLED | XBR0_SPI0E__DISABLED | XBR0_SMB0E__DISABLED
+      | XBR0_CP0E__DISABLED | XBR0_CP0AE__DISABLED | XBR0_CP1E__DISABLED
+      | XBR0_CP1AE__DISABLED | XBR0_SYSCKE__DISABLED;
+  // [XBR0 - Port I/O Crossbar 0]$
+
+  // $[XBR1 - Port I/O Crossbar 1]
+  // [XBR1 - Port I/O Crossbar 1]$
+
+}
+
+//================================================================================
+// SPI_0_enter_ButtonMode_from_FlashMode
+//================================================================================
 extern void SPI_0_enter_ButtonMode_from_FlashMode(void)
 {
   // $[SPI0CKR - SPI0 Clock Rate]

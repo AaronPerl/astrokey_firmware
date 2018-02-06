@@ -66,7 +66,7 @@
 // -----------------------------------------------------------------------------
 // $[Endpoint Max Packet Size]
 #define SLAB_USB_EP1IN_MAX_PACKET_SIZE         64
-#define SLAB_USB_EP1OUT_MAX_PACKET_SIZE        64
+#define SLAB_USB_EP1OUT_MAX_PACKET_SIZE        8
 #define SLAB_USB_EP2IN_MAX_PACKET_SIZE         64
 #define SLAB_USB_EP2OUT_MAX_PACKET_SIZE        64
 #define SLAB_USB_EP3IN_MAX_PACKET_SIZE         64

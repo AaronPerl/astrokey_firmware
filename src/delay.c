@@ -12,7 +12,7 @@
 #include "SI_EFM8UB1_Register_Enums.h"
 #include "delay.h"
 
-static volatile uint32_t millis = 0;
+SI_SEGMENT_VARIABLE(millis, static volatile uint32_t, SI_SEG_XDATA) = 0;
 
 uint32_t getMillis()
 {

@@ -17,6 +17,7 @@
 #include "delay.h"
 #include "EFM8UB1_FlashPrimitives.h"
 #include "EFM8UB1_FlashUtils.h"
+#include "flash.h"
 
 // ----------------------------------------------------------------------------
 // Variables
@@ -267,6 +268,7 @@ void astrokeyPoll()
       workflowUpdated = -1;
     }
 
+
     if (checkKeyPressed(1 << 0, PRESSED(S0)))
       startWorkflow(0);
     else if (checkKeyReleased(1 << 0, PRESSED(S0)))
@@ -292,4 +294,30 @@ void astrokeyPoll()
     else if (checkKeyReleased(1 << 4, PRESSED(S4)))
       resumeWorkflow(4);
   }
+}
+
+bool flashMode = false;
+
+// Returns true if the mode changed, false otherwise
+bool astrokeyEnterFlashMode()
+{
+  if (!flashMode)
+  {
+    enter_FlashMode_from_ButtonMode();
+    flashMode = true;
+    return true;
+  }
+  return false;
+}
+
+// Returns true if the mode changed, false otherwise
+bool astrokeyEnterButtonMode()
+{
+  if (flashMode)
+  {
+    enter_ButtonMode_from_FlashMode();
+    flashMode = false;
+    return true;
+  }
+  return false;
 }

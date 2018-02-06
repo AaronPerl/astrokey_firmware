@@ -23,15 +23,16 @@
 
 // Switch configuration
 #define NUM_SWITCHES 5
-#define S0 P2_B0
-#define S1 P1_B0
-#define S2 P0_B7
-#define S3 P0_B6
-#define S4 P0_B5
-#define D_LED P0_B3
-#define L0 P1_B1
-#define L1 P1_B2
-#define L2 P3_B1
+#define S0       P2_B0
+#define S1       P1_B0
+#define S2       P0_B7
+#define S3       P0_B6
+#define S4       P0_B5
+#define D_LED    P0_B3
+#define L0       P1_B1
+#define L1       P1_B2
+#define L2       P3_B1
+#define FLASH_CS P0_B4
 
 // Switch pressed
 #define PRESSED(x) (!x)
@@ -90,5 +91,8 @@ extern volatile int8_t workflowUpdated;
 extern uint32_t prevTransitionTime;
 void astrokeyInit();
 void astrokeyPoll();
+
+bool astrokeyEnterFlashMode();
+bool astrokeyEnterButtonMode();
 
 #endif /* INC_ASTROKEY_H_ */
