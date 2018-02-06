@@ -14,6 +14,8 @@
 
 #include <SI_EFM8UB1_Defs.h>
 #include <stdint.h>
+#include <flash.h>
+#include "efm8_usb.h"
 
 // Astrokey USB protocol
 
@@ -64,29 +66,29 @@ typedef struct {
   uint8_t value;
 } Action_TypeDef;
 
-// User data flash
-#define USER_PAGE_SIZE  64
-#define USER_START_ADDR 0xF800
-
-// Number of pages per macro
-#define WORKFLOW_PAGES 2
+// Starting block for macro storage in external flash
+#define WORKFLOW_START_BLOCK 1
+// Starting address for macro storage in external flash
+#define WORKFLOW_START_ADDRESS (WORKFLOW_START_BLOCK * FLASH_4K_BLOCK_SIZE)
+// Number of blocks per macro
+#define WORKFLOW_BLOCKS 1
 // Number of bytes per macro
-#define WORKFLOW_BYTES (WORKFLOW_PAGES * USER_PAGE_SIZE)
+#define WORKFLOW_BYTES (WORKFLOW_BLOCKS * FLASH_4K_BLOCK_SIZE)
 // Maximum number of actions in a macro
-#define WORKFLOW_MAX_SIZE ((WORKFLOW_BYTES) / sizeof(Action_TypeDef))
-// Max number of keys simultaenously held by macro
+#define WORKFLOW_MAX_SIZE 64//((WORKFLOW_BYTES) / sizeof(Action_TypeDef))
+// Max number of keys simultaneously held by macro
 #define WORKFLOW_MAX_KEYS 6
 
-#define WORKFLOW_FLASH_ADDR USER_START_ADDR
+void eraseWorkflow(uint8_t eraseIndex);
+void saveWorkflowPacket(SI_VARIABLE_SEGMENT_POINTER(workflowData, uint8_t, SI_SEG_GENERIC),
+                        uint8_t saveIndex, uint8_t packetIndex, uint16_t length);
+void loadWorkflowPacket(SI_VARIABLE_SEGMENT_POINTER(workflowData, uint8_t, SI_SEG_GENERIC),
+                        uint8_t loadIndex, uint8_t packetIndex);
 
-void saveWorkflow(Action_TypeDef* workflowData, uint8_t saveIndex);
-void loadWorkflow(Action_TypeDef* workflowData, uint8_t loadIndex);
-
-extern Action_TypeDef SI_SEG_XDATA workflow[WORKFLOW_MAX_SIZE];
 extern uint8_t workflowNumActions;
-
-extern Action_TypeDef SI_SEG_XDATA tmpWorkflow[WORKFLOW_MAX_SIZE];
 extern volatile int8_t workflowUpdated;
+
+extern SI_SEGMENT_VARIABLE(myUsbDevice, USBD_Device_TypeDef, MEM_MODEL_SEG);
 
 extern uint32_t prevTransitionTime;
 void astrokeyInit();

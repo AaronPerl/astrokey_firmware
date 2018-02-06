@@ -18,6 +18,7 @@
 #include "astrokey.h"
 #include "delay.h"
 #include "flash.h"
+#include "leds.h"
 
 // ----------------------------------------------------------------------------
 // Constants
@@ -29,13 +30,21 @@
 static uint8_t tmpBuffer;
 static volatile int8_t workflowTransfer = -1;
 
-#define FLASH_BUFFER_LEN 512
+#define FLASH_BUFFER_LEN 128
 SI_SEGMENT_VARIABLE(flashBuffer[FLASH_BUFFER_LEN], uint8_t, SI_SEG_XDATA);
 
-static uint32_t tmp32;
+static volatile uint8_t workflowTxPacketIndex;
+static volatile uint8_t workflowTxIndex;
+static SI_SEGMENT_VARIABLE(workflowTxBuffer[USB_EP0_SIZE], uint8_t, SI_SEG_XDATA);
 
-volatile uint16_t writeFlash = 0;
-volatile uint32_t writeFlashAddr = 0;
+static volatile uint8_t workflowRxPacketIndex;
+static volatile uint8_t workflowRxIndex;
+static SI_SEGMENT_VARIABLE(workflowRxBuffer[USB_EP0_SIZE], uint8_t, SI_SEG_XDATA);
+
+static uint32_t SI_SEG_XDATA tmp32;
+
+volatile uint16_t SI_SEG_XDATA writeFlash = 0;
+volatile uint32_t SI_SEG_XDATA writeFlashAddr = 0;
 
 // ----------------------------------------------------------------------------
 // Functions
@@ -211,13 +220,23 @@ USB_Status_TypeDef USBD_SetupCmdCb(SI_VARIABLE_SEGMENT_POINTER(
         {
           // Read workflow off device
           case ASTROKEY_GET_WORKFLOW:
-            loadWorkflow(tmpWorkflow, setup->wValue);
+            // We can't fit the entire workflow into RAM, but we can still send it in one transfer.
+            // By taking advantage of the fact that the EFM8 USB library splits large transfers automatically,
+            // we can load the data one packet at a time as the packets get sent.
 
+            // Reset the tx packet index
+            workflowTxPacketIndex = 0;
+            // Record the workflow index being sent
+            workflowTxIndex = setup->wValue;
+            // Load the first packet
+            loadWorkflowPacket((SI_VARIABLE_SEGMENT_POINTER(, uint8_t, SI_SEG_GENERIC))workflowTxBuffer,
+                               workflowTxIndex, workflowTxPacketIndex);
+            // Initiate the write, passing in the tx buffer as the data
             USBD_Write(EP0,
-                       (SI_VARIABLE_SEGMENT_POINTER(, uint8_t, SI_SEG_GENERIC))tmpWorkflow,
+                       (SI_VARIABLE_SEGMENT_POINTER(, uint8_t, SI_SEG_GENERIC))workflowTxBuffer,
                        EFM8_MIN(WORKFLOW_BYTES, setup->wLength),
-                       false);
-
+                       true);
+            // The remaining packets will get loaded in the transfer complete callback
             retVal = USB_STATUS_OK;
             break;
           case 0xF0:
@@ -273,13 +292,20 @@ USB_Status_TypeDef USBD_SetupCmdCb(SI_VARIABLE_SEGMENT_POINTER(
       switch (setup->wIndex) // Request type
       {
         case ASTROKEY_SET_WORKFLOW:
-          memset((void*) tmpWorkflow, 0, WORKFLOW_BYTES);
+          // Reset the rx packet index
+          workflowRxPacketIndex = 0;
+          // Record the workflow index being received
+          workflowRxIndex = setup->wValue;
+          // Erase selected macro to allow overwriting
+          eraseWorkflow(workflowRxIndex);
+          // Initiate read, similarly to get workflow the packets will be handled one by one
+          // in the transfer complete callback.
           USBD_Read(EP0,
-                    (SI_VARIABLE_SEGMENT_POINTER(, uint8_t, SI_SEG_GENERIC))tmpWorkflow,
+                    (SI_VARIABLE_SEGMENT_POINTER(, uint8_t, SI_SEG_GENERIC))workflowRxBuffer,
                     EFM8_MIN(WORKFLOW_BYTES, setup->wLength),
                     true);
 
-          workflowTransfer = setup->wValue;
+          //workflowTransfer = setup->wValue;
 
           retVal = USB_STATUS_OK;
           break;
@@ -447,19 +473,59 @@ uint16_t USBD_XferCompleteCb(uint8_t epAddr,
                              uint16_t remaining)
 {
   UNREFERENCED_ARGUMENT(epAddr);
-  UNREFERENCED_ARGUMENT(xferred);
 
-  if (status == USB_STATUS_OK && remaining == 0)
+  if (status == USB_STATUS_OK)
   {
-    if (workflowTransfer != -1)
+    if (remaining == 0)
     {
-      workflowUpdated = workflowTransfer;
-      workflowTransfer = -1;
+      if (workflowTransfer != -1)
+      {
+        workflowUpdated = workflowTransfer;
+        workflowTransfer = -1;
+      }
+      if (writeFlash)
+      {
+        writeFlashBytes(writeFlashAddr, flashBuffer, writeFlash);
+        writeFlash = 0;
+      }
     }
-    if (writeFlash)
+    // Unfinished packet, check if next packet needs to be retrieved
+    else
     {
-      writeFlashBytes(writeFlashAddr, flashBuffer, writeFlash);
-      writeFlash = 0;
+      // Workflow tx to host, read next packet from flash and reset data buffer position
+      if (myUsbDevice.ep0.buf == workflowTxBuffer + xferred)
+      {
+        // Clearing xferred ensures that this transfer will not also be detected as a workflow rx,
+        // as the rx buffer occurs directly after the tx buffer in memory, and the length
+        // of the tx buffer is equal to EP0's size, which means a full length transfer
+        // will result in workflowRxBuffer being in the memory position of workflowTxBuffer + xferred.
+        xferred = 0;
+        setLayerLEDs(1);
+        // Load the next workflow packet
+        workflowTxPacketIndex++;
+        loadWorkflowPacket(workflowTxBuffer,
+                           workflowTxIndex,
+                           workflowTxPacketIndex);
+        // Reset the buffer position
+        myUsbDevice.ep0.buf = workflowTxBuffer;
+      }
+    }
+    // Workflow rx from host, save current packet and reset data buffer position
+    if (myUsbDevice.ep0.buf == workflowRxBuffer + xferred)
+    {
+      if (xferred == USB_EP0_SIZE)
+        setLayerLEDs(0);
+      else
+        setLayerLEDs(2);
+      // Save the received workflow packet
+      saveWorkflowPacket(workflowRxBuffer,
+                         workflowRxIndex,
+                         workflowRxPacketIndex,
+                         xferred);
+      // Increment rx packet index for next receive
+      workflowRxPacketIndex++;
+      // Reset the buffer position
+      myUsbDevice.ep0.buf = workflowRxBuffer;
     }
   }
 

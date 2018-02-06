@@ -68,11 +68,11 @@
 // Constants //
 ///////////////
 
-#define FLASH_WRITE_PAGE_SIZE     0x00000100
-#define FLASH_4K_BLOCK_SIZE       0x00001000
-#define FLASH_32K_BLOCK_SIZE      0x00008000
-#define FLASH_64K_BLOCK_SIZE      0x00010000
-#define FLASH_SIZE                0x00080000
+#define FLASH_WRITE_PAGE_SIZE     0x00000100UL
+#define FLASH_4K_BLOCK_SIZE       0x00001000UL
+#define FLASH_32K_BLOCK_SIZE      0x00008000UL
+#define FLASH_64K_BLOCK_SIZE      0x00010000UL
+#define FLASH_SIZE                0x00080000UL
 
 ///////////////
 // Functions //

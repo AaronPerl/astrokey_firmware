@@ -15,8 +15,6 @@
 #include "descriptors.h"
 #include "idle.h"
 #include "delay.h"
-#include "EFM8UB1_FlashPrimitives.h"
-#include "EFM8UB1_FlashUtils.h"
 #include "flash.h"
 
 // ----------------------------------------------------------------------------
@@ -25,7 +23,7 @@
 // Number of keys currently being pressed by the workflow
 uint8_t keysPressed = 0;
 // The current report to send the
-volatile KeyReport_TypeDef keyReport =
+volatile KeyReport_TypeDef SI_SEG_XDATA keyReport =
 {
   0,
   0,
@@ -178,19 +176,32 @@ void stepWorkflow()
   }
 }
 
-void saveWorkflow(Action_TypeDef* workflowData, uint8_t saveIndex)
+void eraseWorkflow(uint8_t eraseIndex)
 {
   uint8_t i;
-  FLADDR flashAddr = WORKFLOW_FLASH_ADDR + (saveIndex * WORKFLOW_BYTES);
-  for (i = 0; i < WORKFLOW_PAGES; i++)
-    FLASH_PageErase(flashAddr + (USER_PAGE_SIZE * i));
-  FLASH_Write(flashAddr, (uint8_t*) workflowData, WORKFLOW_BYTES);
+  for (i = 0; i < WORKFLOW_BLOCKS; i++)
+  {
+    eraseFlashBlock(
+     (                                          // Calculate block index
+       WORKFLOW_START_BLOCK +                     // Skip blocks before workflows
+       (uint32_t)eraseIndex * WORKFLOW_BLOCKS +   // Skip blocks of previous workflows
+       (uint32_t)i                                // Skip blocks already erased
+     ) * FLASH_4K_BLOCK_SIZE);                  // Multiply by block size
+  }
 }
 
-void loadWorkflow(Action_TypeDef* workflowData, uint8_t loadIndex)
+void saveWorkflowPacket(SI_VARIABLE_SEGMENT_POINTER(workflowData, uint8_t, SI_SEG_GENERIC),
+                        uint8_t saveIndex, uint8_t packetIndex, uint16_t length)
 {
-  FLADDR flashAddr = WORKFLOW_FLASH_ADDR + (loadIndex * WORKFLOW_BYTES);
-  FLASH_Read((uint8_t *)workflowData, flashAddr, WORKFLOW_BYTES);
+  uint32_t flashAddr = WORKFLOW_START_ADDRESS + (saveIndex * WORKFLOW_BYTES) + (packetIndex * USB_EP0_SIZE);
+  writeFlashBytes(flashAddr, workflowData, length);
+}
+
+void loadWorkflowPacket(SI_VARIABLE_SEGMENT_POINTER(workflowData, uint8_t, SI_SEG_GENERIC),
+                        uint8_t loadIndex, uint8_t packetIndex)
+{
+  uint32_t flashAddr = WORKFLOW_START_ADDRESS + (loadIndex * WORKFLOW_BYTES) + (packetIndex * USB_EP0_SIZE);
+  readFlashBytes(flashAddr, workflowData, USB_EP0_SIZE);
 }
 
 // Starts running a workflow
@@ -199,7 +210,7 @@ void startWorkflow(uint8_t index)
   workflowIndex = index;
   actionIndices[workflowIndex] = 0;
 
-  loadWorkflow(workflow, index);
+  //loadWorkflow(workflow, index);
   stepWorkflow();
 }
 
@@ -207,7 +218,7 @@ void resumeWorkflow(uint8_t index)
 {
   workflowIndex = index;
 
-  loadWorkflow(workflow, index);
+  //loadWorkflow(workflow, index);
   stepWorkflow();
 }
 
@@ -264,7 +275,7 @@ void astrokeyPoll()
   {
     if (workflowUpdated != -1)
     {
-      saveWorkflow(tmpWorkflow, workflowUpdated);
+      //saveWorkflow(tmpWorkflow, workflowUpdated);
       workflowUpdated = -1;
     }
 

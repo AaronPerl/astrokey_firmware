@@ -53,7 +53,7 @@ extern "C"
     uint8_t keys[6];
   } KeyReport_TypeDef;
 
-  extern volatile KeyReport_TypeDef keyReport;
+  extern volatile KeyReport_TypeDef SI_SEG_XDATA keyReport;
   extern volatile bool keyReportSent;
 
 // bRequest number for WebUSB requests
@@ -107,8 +107,8 @@ extern "C"
     0x46, 0x00, 0x54, 0x00,//
     0x31, 0x00, 0x30, 0x00,//
     0x30, 0x00,//
-    0x20,      // Vendor Code
-    0x00       // Padding
+    0x20,// Vendor Code
+    0x00// Padding
   };
 
   extern SI_SEGMENT_VARIABLE_SEGMENT_POINTER(myURLs[], const USB_URLDescriptor_TypeDef, SI_SEG_GENERIC, const SI_SEG_CODE);
