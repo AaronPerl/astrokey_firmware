@@ -74,8 +74,10 @@ typedef struct {
 #define WORKFLOW_BLOCKS 1
 // Number of bytes per macro
 #define WORKFLOW_BYTES (WORKFLOW_BLOCKS * FLASH_4K_BLOCK_SIZE)
+// Number of bytes per action
+#define ACTION_BYTES (sizeof(Action_TypeDef))
 // Maximum number of actions in a macro
-#define WORKFLOW_MAX_SIZE 64//((WORKFLOW_BYTES) / sizeof(Action_TypeDef))
+#define WORKFLOW_MAX_SIZE (WORKFLOW_BYTES / ACTION_BYTES)
 // Max number of keys simultaneously held by macro
 #define WORKFLOW_MAX_KEYS 6
 
@@ -84,9 +86,13 @@ void saveWorkflowPacket(SI_VARIABLE_SEGMENT_POINTER(workflowData, uint8_t, SI_SE
                         uint8_t saveIndex, uint8_t packetIndex, uint16_t length);
 void loadWorkflowPacket(SI_VARIABLE_SEGMENT_POINTER(workflowData, uint8_t, SI_SEG_GENERIC),
                         uint8_t loadIndex, uint8_t packetIndex);
+void loadWorkflowAction(SI_VARIABLE_SEGMENT_POINTER(action, Action_TypeDef, SI_SEG_GENERIC),
+                        uint8_t workflowIndex, uint8_t actionIndex);
+
 
 extern uint8_t workflowNumActions;
 extern volatile int8_t workflowUpdated;
+extern bool flashMode;
 
 extern SI_SEGMENT_VARIABLE(myUsbDevice, USBD_Device_TypeDef, MEM_MODEL_SEG);
 

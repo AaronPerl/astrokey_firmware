@@ -32,10 +32,9 @@ volatile KeyReport_TypeDef SI_SEG_XDATA keyReport =
 
 volatile bool keyReportSent = false;
 volatile int8_t workflowUpdated = -1;
-Action_TypeDef SI_SEG_XDATA tmpWorkflow[WORKFLOW_MAX_SIZE];
 
-// The data of the current workflow
-Action_TypeDef SI_SEG_XDATA workflow[WORKFLOW_MAX_SIZE];
+// The current action being run
+Action_TypeDef curAction;
 
 // Index of current workflow running (i.e. 0 for 1st key, etc.)
 uint8_t workflowIndex = NO_WORKFLOW;
@@ -115,33 +114,34 @@ void releaseKey(uint8_t key)
 
 bool curPressDown = false;
 bool delayStarted = false;
-uint32_t delayStartTime;
+uint32_t SI_SEG_XDATA delayStartTime;
 
 // Advances the workflow one action forward, ending it if the end is reached
 void stepWorkflow()
 {
-  uint8_t actionType = workflow[actionIndices[workflowIndex]].actionType;
-  uint8_t value = workflow[actionIndices[workflowIndex]].value;
-  switch (actionType)
+  IE_EA = 0;
+  loadWorkflowAction(&curAction, workflowIndex, actionIndices[workflowIndex]);
+  IE_EA = 1;
+  switch (curAction.actionType)
   {
     case WORKFLOW_ACTION_DOWN:
-      pressKey(value);
+      pressKey(curAction.value);
       actionIndices[workflowIndex]++;
       break;
     case WORKFLOW_ACTION_UP:
-      releaseKey(value);
+      releaseKey(curAction.value);
       actionIndices[workflowIndex]++;
       break;
     case WORKFLOW_ACTION_PRESS:
       if (curPressDown)
       {
-        releaseKey(value);
+        releaseKey(curAction.value);
         curPressDown = false;
         actionIndices[workflowIndex]++;
       }
       else
       {
-        pressKey(value);
+        pressKey(curAction.value);
         curPressDown = true;
       }
       break;
@@ -151,7 +151,7 @@ void stepWorkflow()
         delayStarted = true;
         delayStartTime = getMillis();
       }
-      else if ((getMillis() - delayStartTime) > ((uint32_t)value * 10))
+      else if ((getMillis() - delayStartTime) > ((uint32_t)curAction.value * 10))
       {
         delayStarted = false;
         actionIndices[workflowIndex]++;
@@ -164,12 +164,12 @@ void stepWorkflow()
 
   keyReportSent = false;
 
-  if (actionType == 0x00 || actionType == WORKFLOW_ACTION_UNPROGRAMMED ||
+  if (curAction.actionType == 0x00 || curAction.actionType == WORKFLOW_ACTION_UNPROGRAMMED ||
       actionIndices[workflowIndex] == WORKFLOW_MAX_SIZE)
   {
     workflowIndex = NO_WORKFLOW;
   }
-  else if (actionType == WORKFLOW_ACTION_PAUSE)
+  else if (curAction.actionType == WORKFLOW_ACTION_PAUSE)
   {
     actionIndices[workflowIndex]++;
     workflowIndex = NO_WORKFLOW;
@@ -202,6 +202,13 @@ void loadWorkflowPacket(SI_VARIABLE_SEGMENT_POINTER(workflowData, uint8_t, SI_SE
 {
   uint32_t flashAddr = WORKFLOW_START_ADDRESS + (loadIndex * WORKFLOW_BYTES) + (packetIndex * USB_EP0_SIZE);
   readFlashBytes(flashAddr, workflowData, USB_EP0_SIZE);
+}
+
+void loadWorkflowAction(SI_VARIABLE_SEGMENT_POINTER(action, Action_TypeDef, SI_SEG_GENERIC),
+                        uint8_t workflowIndex, uint8_t actionIndex)
+{
+  uint32_t flashAddr = WORKFLOW_START_ADDRESS + (workflowIndex * WORKFLOW_BYTES) + (actionIndex * ACTION_BYTES);
+  readFlashBytes(flashAddr, (uint8_t*) action, ACTION_BYTES);
 }
 
 // Starts running a workflow
