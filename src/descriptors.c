@@ -282,7 +282,7 @@ SI_SEGMENT_VARIABLE_SEGMENT_POINTER(myURLs[], const USB_URLDescriptor_TypeDef, S
   landingPage,
 };
 
-uint16_t numUrls = sizeof(landingPage) / sizeof(landingPage[0]);
+SI_SEGMENT_VARIABLE(numUrls, const uint16_t, SI_SEG_CODE) = sizeof(landingPage) / sizeof(landingPage[0]);
 
 #ifdef __cplusplus
 }

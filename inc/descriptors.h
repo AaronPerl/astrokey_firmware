@@ -94,25 +94,25 @@ extern "C"
 // Size of entire MS OS 2.0 Descriptor
 #define MS_DS_S htole16(sizeof(MS_OS_20_DescriptorSet_TypeDef))
 
-  extern SI_SEGMENT_VARIABLE(ReportDescriptor0[69], const uint8_t, SI_SEG_CODE);
-  extern SI_SEGMENT_VARIABLE(deviceDesc[], const USB_DeviceDescriptor_TypeDef, SI_SEG_CODE);
-  extern SI_SEGMENT_VARIABLE(configDesc[], const uint8_t, SI_SEG_CODE);
-  extern SI_SEGMENT_VARIABLE(initstruct, const USBD_Init_TypeDef, SI_SEG_CODE);
+extern SI_SEGMENT_VARIABLE(ReportDescriptor0[69], const uint8_t, SI_SEG_CODE);
+extern SI_SEGMENT_VARIABLE(deviceDesc[], const USB_DeviceDescriptor_TypeDef, SI_SEG_CODE);
+extern SI_SEGMENT_VARIABLE(configDesc[], const uint8_t, SI_SEG_CODE);
+extern SI_SEGMENT_VARIABLE(initstruct, const USBD_Init_TypeDef, SI_SEG_CODE);
 
-  SI_SEGMENT_VARIABLE(wcidDesc[], static const USB_StringDescriptor_TypeDef, SI_SEG_CODE) =
-  {
-    0x12,                   // Length (18 Bytes)
-    0x03,// Descriptor Type (3 = String)
-    0x4D, 0x00, 0x53, 0x00,// MSFT100, Unicode LE
-    0x46, 0x00, 0x54, 0x00,//
-    0x31, 0x00, 0x30, 0x00,//
-    0x30, 0x00,//
-    0x20,// Vendor Code
-    0x00// Padding
-  };
+SI_SEGMENT_VARIABLE(wcidDesc[], static const USB_StringDescriptor_TypeDef, SI_SEG_CODE) =
+{
+  0x12,                   // Length (18 Bytes)
+  0x03,// Descriptor Type (3 = String)
+  0x4D, 0x00, 0x53, 0x00,// MSFT100, Unicode LE
+  0x46, 0x00, 0x54, 0x00,//
+  0x31, 0x00, 0x30, 0x00,//
+  0x30, 0x00,//
+  0x20,// Vendor Code
+  0x00// Padding
+};
 
-  extern SI_SEGMENT_VARIABLE_SEGMENT_POINTER(myURLs[], const USB_URLDescriptor_TypeDef, SI_SEG_GENERIC, const SI_SEG_CODE);
-  extern uint16_t numUrls;
+extern SI_SEGMENT_VARIABLE_SEGMENT_POINTER(myURLs[], const USB_URLDescriptor_TypeDef, SI_SEG_GENERIC, const SI_SEG_CODE);
+extern SI_SEGMENT_VARIABLE(numUrls, const uint16_t, SI_SEG_CODE);
 
 extern SI_SEGMENT_VARIABLE(bosDesc, const USB_BOS_TypeDef, SI_SEG_CODE);
 extern SI_SEGMENT_VARIABLE(msDesc, const MS_OS_20_DescriptorSet_TypeDef, SI_SEG_CODE);
