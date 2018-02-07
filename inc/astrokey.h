@@ -23,8 +23,17 @@
 #define ASTROKEY_SET_WORKFLOW 0x01
 #define ASTROKEY_GET_WORKFLOW 0x02
 
+// wValue bitmask
+#define ASTROKEY_INDEX_MASK   0x3F
+#define ASTROKEY_INDEX_BSHIFT 0x00
+#define ASTROKEY_LAYER_MASK   0xC0
+#define ASTROKEY_LAYER_BSHIFT 0x06
+
 // Switch configuration
 #define NUM_SWITCHES 5
+#define NUM_LAYERS 4
+
+// Pin mapping
 #define S0       P2_B0
 #define S1       P1_B0
 #define S2       P0_B7
@@ -35,6 +44,8 @@
 #define L1       P1_B2
 #define L2       P3_B1
 #define FLASH_CS P0_B4
+#define BTN0     P0_B2
+#define BTN1     P0_B0
 
 // Switch pressed
 #define PRESSED(x) (!x)
@@ -81,13 +92,13 @@ typedef struct {
 // Max number of keys simultaneously held by macro
 #define WORKFLOW_MAX_KEYS 6
 
-void eraseWorkflow(uint8_t eraseIndex);
+void eraseWorkflow(uint8_t layer, uint8_t eraseIndex);
 void saveWorkflowPacket(SI_VARIABLE_SEGMENT_POINTER(workflowData, uint8_t, SI_SEG_GENERIC),
-                        uint8_t saveIndex, uint8_t packetIndex, uint16_t length);
+                        uint8_t layer, uint8_t saveIndex, uint8_t packetIndex, uint16_t length);
 void loadWorkflowPacket(SI_VARIABLE_SEGMENT_POINTER(workflowData, uint8_t, SI_SEG_GENERIC),
-                        uint8_t loadIndex, uint8_t packetIndex);
+                        uint8_t layer, uint8_t loadIndex, uint8_t packetIndex);
 void loadWorkflowAction(SI_VARIABLE_SEGMENT_POINTER(action, Action_TypeDef, SI_SEG_GENERIC),
-                        uint8_t workflowIndex, uint8_t actionIndex);
+                        uint8_t layer, uint8_t workflowIndex, uint8_t actionIndex);
 
 
 extern uint8_t workflowNumActions;
@@ -96,11 +107,11 @@ extern bool flashMode;
 
 extern SI_SEGMENT_VARIABLE(myUsbDevice, USBD_Device_TypeDef, MEM_MODEL_SEG);
 
+bool astrokeyEnterFlashMode();
+bool astrokeyEnterButtonMode();
+
 extern uint32_t prevTransitionTime;
 void astrokeyInit();
 void astrokeyPoll();
-
-bool astrokeyEnterFlashMode();
-bool astrokeyEnterButtonMode();
 
 #endif /* INC_ASTROKEY_H_ */

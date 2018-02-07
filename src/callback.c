@@ -35,10 +35,12 @@ SI_SEGMENT_VARIABLE(flashBuffer[FLASH_BUFFER_LEN], uint8_t, SI_SEG_XDATA);
 
 static volatile uint8_t workflowTxPacketIndex;
 static volatile uint8_t workflowTxIndex;
+static volatile uint8_t workflowTxLayer;
 static SI_SEGMENT_VARIABLE(workflowTxBuffer[USB_EP0_SIZE], uint8_t, SI_SEG_XDATA);
 
 static volatile uint8_t workflowRxPacketIndex;
 static volatile uint8_t workflowRxIndex;
+static volatile uint8_t workflowRxLayer;
 static SI_SEGMENT_VARIABLE(workflowRxBuffer[USB_EP0_SIZE], uint8_t, SI_SEG_XDATA);
 
 static uint32_t SI_SEG_XDATA tmp32;
@@ -227,10 +229,12 @@ USB_Status_TypeDef USBD_SetupCmdCb(SI_VARIABLE_SEGMENT_POINTER(
             // Reset the tx packet index
             workflowTxPacketIndex = 0;
             // Record the workflow index being sent
-            workflowTxIndex = setup->wValue;
+            workflowTxIndex = ((setup -> wValue) & ASTROKEY_INDEX_MASK) >> ASTROKEY_INDEX_BSHIFT;
+            // Record the layer of the workflow being sent
+            workflowTxLayer = ((setup -> wValue) & ASTROKEY_LAYER_MASK) >> ASTROKEY_LAYER_BSHIFT;
             // Load the first packet
             loadWorkflowPacket((SI_VARIABLE_SEGMENT_POINTER(, uint8_t, SI_SEG_GENERIC))workflowTxBuffer,
-                               workflowTxIndex, workflowTxPacketIndex);
+                               workflowTxLayer, workflowTxIndex, workflowTxPacketIndex);
             // Initiate the write, passing in the tx buffer as the data
             USBD_Write(EP0,
                        (SI_VARIABLE_SEGMENT_POINTER(, uint8_t, SI_SEG_GENERIC))workflowTxBuffer,
@@ -295,9 +299,11 @@ USB_Status_TypeDef USBD_SetupCmdCb(SI_VARIABLE_SEGMENT_POINTER(
           // Reset the rx packet index
           workflowRxPacketIndex = 0;
           // Record the workflow index being received
-          workflowRxIndex = setup->wValue;
+          workflowRxIndex = ((setup -> wValue) & ASTROKEY_INDEX_MASK) >> ASTROKEY_INDEX_BSHIFT;
+          // Record the layer of the workflow being received
+          workflowRxLayer = ((setup -> wValue) & ASTROKEY_LAYER_MASK) >> ASTROKEY_LAYER_BSHIFT;
           // Erase selected macro to allow overwriting
-          eraseWorkflow(workflowRxIndex);
+          eraseWorkflow(workflowRxLayer, workflowRxIndex);
           // Initiate read, similarly to get workflow the packets will be handled one by one
           // in the transfer complete callback.
           USBD_Read(EP0,
@@ -504,6 +510,7 @@ uint16_t USBD_XferCompleteCb(uint8_t epAddr,
         // Load the next workflow packet
         workflowTxPacketIndex++;
         loadWorkflowPacket(workflowTxBuffer,
+                           workflowTxLayer,
                            workflowTxIndex,
                            workflowTxPacketIndex);
         // Reset the buffer position
@@ -519,6 +526,7 @@ uint16_t USBD_XferCompleteCb(uint8_t epAddr,
         setLayerLEDs(2);
       // Save the received workflow packet
       saveWorkflowPacket(workflowRxBuffer,
+                         workflowRxLayer,
                          workflowRxIndex,
                          workflowRxPacketIndex,
                          xferred);

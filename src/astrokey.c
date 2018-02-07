@@ -16,6 +16,7 @@
 #include "idle.h"
 #include "delay.h"
 #include "flash.h"
+#include "leds.h"
 
 // ----------------------------------------------------------------------------
 // Variables
@@ -41,6 +42,16 @@ uint8_t workflowIndex = NO_WORKFLOW;
 
 // Index of current action in current workflow running;
 uint8_t actionIndices[NUM_SWITCHES] = {0};
+
+// Current device layer
+uint8_t layer = 0;
+
+// Layer of the current workflow being run
+uint8_t workflowLayer;
+
+// Previous states of layer buttons
+bool b0Prev = false;
+bool b1Prev = false;
 
 // Checks if a key is currently pressed by the workflow
 // Returns the index of the key in array of keys currently pressed,
@@ -120,7 +131,7 @@ uint32_t SI_SEG_XDATA delayStartTime;
 void stepWorkflow()
 {
   IE_EA = 0;
-  loadWorkflowAction(&curAction, workflowIndex, actionIndices[workflowIndex]);
+  loadWorkflowAction(&curAction, workflowLayer, workflowIndex, actionIndices[workflowIndex]);
   IE_EA = 1;
   switch (curAction.actionType)
   {
@@ -176,38 +187,44 @@ void stepWorkflow()
   }
 }
 
-void eraseWorkflow(uint8_t eraseIndex)
+void eraseWorkflow(uint8_t layer, uint8_t eraseIndex)
 {
   uint8_t i;
   for (i = 0; i < WORKFLOW_BLOCKS; i++)
   {
     eraseFlashBlock(
-     (                                          // Calculate block index
-       WORKFLOW_START_BLOCK +                     // Skip blocks before workflows
-       (uint32_t)eraseIndex * WORKFLOW_BLOCKS +   // Skip blocks of previous workflows
-       (uint32_t)i                                // Skip blocks already erased
-     ) * FLASH_4K_BLOCK_SIZE);                  // Multiply by block size
+     (                                                         // Calculate block index
+       WORKFLOW_START_BLOCK +                                    // Skip blocks before workflows
+       (layer * NUM_SWITCHES + eraseIndex) * WORKFLOW_BLOCKS +   // Skip blocks of previous workflows
+       (uint32_t)i                                               // Skip blocks already erased
+     ) * FLASH_4K_BLOCK_SIZE);                                 // Multiply by block size
   }
 }
 
 void saveWorkflowPacket(SI_VARIABLE_SEGMENT_POINTER(workflowData, uint8_t, SI_SEG_GENERIC),
-                        uint8_t saveIndex, uint8_t packetIndex, uint16_t length)
+                        uint8_t layer, uint8_t saveIndex, uint8_t packetIndex, uint16_t length)
 {
-  uint32_t flashAddr = WORKFLOW_START_ADDRESS + (saveIndex * WORKFLOW_BYTES) + (packetIndex * USB_EP0_SIZE);
+  uint32_t flashAddr = WORKFLOW_START_ADDRESS +
+                       WORKFLOW_BYTES * (layer * NUM_SWITCHES + saveIndex) +
+                       USB_EP0_SIZE * packetIndex;
   writeFlashBytes(flashAddr, workflowData, length);
 }
 
 void loadWorkflowPacket(SI_VARIABLE_SEGMENT_POINTER(workflowData, uint8_t, SI_SEG_GENERIC),
-                        uint8_t loadIndex, uint8_t packetIndex)
+                        uint8_t layer, uint8_t loadIndex, uint8_t packetIndex)
 {
-  uint32_t flashAddr = WORKFLOW_START_ADDRESS + (loadIndex * WORKFLOW_BYTES) + (packetIndex * USB_EP0_SIZE);
+  uint32_t flashAddr = WORKFLOW_START_ADDRESS +
+                       WORKFLOW_BYTES * (layer * NUM_SWITCHES + loadIndex) +
+                       USB_EP0_SIZE * packetIndex;
   readFlashBytes(flashAddr, workflowData, USB_EP0_SIZE);
 }
 
 void loadWorkflowAction(SI_VARIABLE_SEGMENT_POINTER(action, Action_TypeDef, SI_SEG_GENERIC),
-                        uint8_t workflowIndex, uint8_t actionIndex)
+                        uint8_t layer, uint8_t workflowIndex, uint8_t actionIndex)
 {
-  uint32_t flashAddr = WORKFLOW_START_ADDRESS + (workflowIndex * WORKFLOW_BYTES) + (actionIndex * ACTION_BYTES);
+  uint32_t flashAddr = WORKFLOW_START_ADDRESS +
+                       WORKFLOW_BYTES * (layer * NUM_SWITCHES + workflowIndex) +
+                       ACTION_BYTES * actionIndex;
   readFlashBytes(flashAddr, (uint8_t*) action, ACTION_BYTES);
 }
 
@@ -216,6 +233,7 @@ void startWorkflow(uint8_t index)
 {
   workflowIndex = index;
   actionIndices[workflowIndex] = 0;
+  workflowLayer = layer;
 
   //loadWorkflow(workflow, index);
   stepWorkflow();
@@ -264,6 +282,32 @@ void astrokeyInit()
   enter_ButtonMode_from_RESET();
 }
 
+bool flashMode = false;
+
+// Returns true if the mode changed, false otherwise
+bool astrokeyEnterFlashMode()
+{
+  if (!flashMode)
+  {
+    enter_FlashMode_from_ButtonMode();
+    flashMode = true;
+    return true;
+  }
+  return false;
+}
+
+// Returns true if the mode changed, false otherwise
+bool astrokeyEnterButtonMode()
+{
+  if (flashMode)
+  {
+    enter_ButtonMode_from_FlashMode();
+    flashMode = false;
+    return true;
+  }
+  return false;
+}
+
 void astrokeyPoll()
 {
   if (PRESSED(S0) && PRESSED(S4))
@@ -271,6 +315,30 @@ void astrokeyPoll()
     *((uint8_t SI_SEG_DATA *) 0x00) = 0xA5;
     RSTSRC = RSTSRC_SWRSF__SET | RSTSRC_PORSF__SET;
   }
+
+  // Layer checking
+  // Disable interrupts, prevent mode from changing
+  IE_EA = 0;
+  // Poll buttons if not in flash mode
+  if (!flashMode)
+  {
+    if (!BTN0 && b0Prev && layer < (NUM_LAYERS - 1))
+    {
+      layer++;
+    }
+    if (!BTN1 && b1Prev && layer > 0)
+    {
+      layer--;
+    }
+    // Record button states
+    b0Prev = BTN0;
+    b1Prev = BTN1;
+
+    setLayerLEDs(layer);
+  }
+  // Reenable interrupts
+  IE_EA = 1;
+
   // Workflow currently running
   if (workflowIndex != NO_WORKFLOW)
   {
@@ -312,30 +380,4 @@ void astrokeyPoll()
     else if (checkKeyReleased(1 << 4, PRESSED(S4)))
       resumeWorkflow(4);
   }
-}
-
-bool flashMode = false;
-
-// Returns true if the mode changed, false otherwise
-bool astrokeyEnterFlashMode()
-{
-  if (!flashMode)
-  {
-    enter_FlashMode_from_ButtonMode();
-    flashMode = true;
-    return true;
-  }
-  return false;
-}
-
-// Returns true if the mode changed, false otherwise
-bool astrokeyEnterButtonMode()
-{
-  if (flashMode)
-  {
-    enter_ButtonMode_from_FlashMode();
-    flashMode = false;
-    return true;
-  }
-  return false;
 }
