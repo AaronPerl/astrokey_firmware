@@ -53,6 +53,9 @@ uint8_t workflowLayer;
 bool b0Prev = false;
 bool b1Prev = false;
 
+// The UUID String descriptor
+UTF16LE_PACKED_STRING_DESC(serDesc[SER_STR_LEN + USB_STRING_DESCRIPTOR_NAME], SER_STR_LEN);
+
 // Checks if a key is currently pressed by the workflow
 // Returns the index of the key in array of keys currently pressed,
 // -1 if the key is not currently being pressed
@@ -279,7 +282,17 @@ uint8_t checkKeyReleased(uint8_t bitMask, uint8_t pressed)
 
 void astrokeyInit()
 {
-  enter_ButtonMode_from_RESET();
+  uint8_t i;
+  // Read chip UUID and write hex string to serial string descriptor
+  for (i = 0; i < UUID_LEN; i++)
+  {
+    serDesc[USB_STRING_DESCRIPTOR_NAME + 2 * i + 0] =
+      NIBBLE_TO_ASCII((UUID[i] >> 8) & 0x0F);
+    serDesc[USB_STRING_DESCRIPTOR_NAME + 2 * i + 1] =
+      NIBBLE_TO_ASCII((UUID[i] >> 0) & 0x0F);
+  }
+  // Enter default device configuration
+  enter_DefaultMode_from_RESET();
 }
 
 bool flashMode = false;

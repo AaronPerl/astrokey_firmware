@@ -17,7 +17,36 @@
 #include <flash.h>
 #include "efm8_usb.h"
 
-// Astrokey USB protocol
+//////////////////////////
+// Device Serial Number //
+//////////////////////////
+
+// Converts a nibble to a hex character
+#define NIBBLE_TO_ASCII(x) ((x) >= 10? (x) - 10 + 'A' : (x) + '0')
+
+// Struct for non-const string descriptors
+#define UTF16LE_PACKED_STRING_DESC(__name, __size) \
+  SI_SEGMENT_VARIABLE(__name,  USB_StringDescriptor_TypeDef, SI_SEG_XDATA) = \
+    { USB_STRING_DESCRIPTOR_UTF16LE_PACKED, __size * 2, USB_STRING_DESCRIPTOR }
+
+// Serial number string descriptor
+extern SI_SEGMENT_VARIABLE(serDesc[], USB_StringDescriptor_TypeDef, SI_SEG_XDATA);
+
+// MCU UUID Flash Address
+#define UUID_ADDR 0xFFC0
+
+// MCU UUID Length in Bytes
+#define UUID_LEN  16
+
+// Length of serial number string (2 characters per byte)
+#define SER_STR_LEN (UUID_LEN * 2)
+
+// MCU UUID
+SI_VARIABLE_SEGMENT_POINTER(UUID, static const uint8_t, SI_SEG_CODE) = UUID_ADDR;
+
+///////////////////////////
+// Astrokey USB protocol //
+///////////////////////////
 
 // wIndex values
 #define ASTROKEY_SET_WORKFLOW 0x01
@@ -28,6 +57,10 @@
 #define ASTROKEY_INDEX_BSHIFT 0x00
 #define ASTROKEY_LAYER_MASK   0xC0
 #define ASTROKEY_LAYER_BSHIFT 0x06
+
+///////////////////////
+// Device Parameters //
+///////////////////////
 
 // Switch configuration
 #define NUM_SWITCHES 5
@@ -50,10 +83,14 @@
 // Switch pressed
 #define PRESSED(x) (!x)
 
-// No macro running
+////////////////////////
+// Workflow Constants //
+////////////////////////
+
+// No workflow running
 #define NO_WORKFLOW 0xFF
 
-// Macro action types
+// Workflow action types
 #define WORKFLOW_ACTION_DOWN  1
 #define WORKFLOW_ACTION_UP    2
 #define WORKFLOW_ACTION_PRESS 3
@@ -71,7 +108,7 @@
 #define MODIFIER_LEFTALT   0x04
 #define MODIFIER_LEFTGUI   0x08
 
-// Macro action struct
+// Workflow action struct
 typedef struct {
   uint8_t actionType;
   uint8_t value;
@@ -100,6 +137,9 @@ void loadWorkflowPacket(SI_VARIABLE_SEGMENT_POINTER(workflowData, uint8_t, SI_SE
 void loadWorkflowAction(SI_VARIABLE_SEGMENT_POINTER(action, Action_TypeDef, SI_SEG_GENERIC),
                         uint8_t layer, uint8_t workflowIndex, uint8_t actionIndex);
 
+////////////////////////
+// Workflow Variables //
+////////////////////////
 
 extern uint8_t workflowNumActions;
 extern volatile int8_t workflowUpdated;
@@ -111,6 +151,11 @@ bool astrokeyEnterFlashMode();
 bool astrokeyEnterButtonMode();
 
 extern uint32_t prevTransitionTime;
+
+////////////////////////
+// Astrokey Functions //
+////////////////////////
+
 void astrokeyInit();
 void astrokeyPoll();
 
